@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+
+
+    <!-- Menu toolbar-->
+
+    <string name="edit">Edit</string>
+    <string name="validate_menu">Validate</string>
+    <string name="map">Map</string>
+
+
+    <!-- detail/form-->
+
+    <string name="media">Media</string>
+    <string name="Description">Description</string>
+    <string name="estate_type">Estate Type</string>
+    <string name="surface">Surface</string>
+    <string name="rooms">Number of rooms</string>
+    <string name="number_of_bathrooms">Bathrooms</string>
+    <string name="number_of_bedrooms">Bedrooms</string>
+    <string name="estate_entry_date">Entry date</string>
+    <string name="estate_sold_date">Sold date</string>
+    <string name="schools">Schools</string>
+    <string name="stores">Stores</string>
+    <string name="park">Park</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="city">City</string>
+    <string name="price">Price</string>
+    <string name="address">Address</string>
+    <string name="postal_code">Postal Code</string>
+
+
+    <!-- search -->
+
+    <string name="search">Search</string>
+    <string name="showing_estate_pictures">Showing estate pictures ? :</string>
+    <string name="choose_the_points_of_interest">Choose the points of interest:</string>
+    <string name="sold">Sold</string>
+    <string name="still_available">Still available ?</string>
+    <string name="minimum_rooms">Minimum Rooms</string>
+    <string name="maximum_rooms">Maximum Rooms</string>
+    <string name="minimum_surface">Minimum Surface</string>
+    <string name="maximum_surface">Maximum Surface</string>
+    <string name="minimum_price">Minimum Price</string>
+    <string name="maximum_price">Maximum Price</string>
+    <string name="yes">yes</string>
+
+
+    <!-- spinner -->
+
+    <string-array name="estate_type">
+        <item>House</item>
+        <item>Flat</item>
+        <item>Penthouse</item>
+        <item>Duplex</item>
+
+    </string-array>
+
+    <string-array name="agent_name">
+        <item>David Bowie</item>
+        <item>Mick jagger</item>
+        <item>Neil Young</item>
+    </string-array>
+
+
+
+
+</resources>

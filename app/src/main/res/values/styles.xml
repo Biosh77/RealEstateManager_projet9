@@ -1,0 +1,53 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!-- TitleTextStyle - List -->
+
+    <style name="TitleTextStyleListItem">
+        <item name="android:textColor">@color/darkGray</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+    <style name="SubtitleTextStyleListItem" >
+        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+    <style name="PriceTitleListItem" >
+        <item name="android:textColor">@color/pink_price</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+
+    <!-- TitleTextStyle - Detail -->
+
+    <style name="TitleTextStyleDetail">
+        <item name="android:textColor">@color/dimGray</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+    <style name="SubtitleTextStyleDetail" >
+        <item name="android:textColor">@color/dimGray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+    <style name="TextStyleDetail" >
+        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+    </style>
+
+</resources>
