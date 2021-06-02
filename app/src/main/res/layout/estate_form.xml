@@ -29,14 +29,11 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <AutoCompleteTextView
-                android:id="@+id/spinner_Estate_type"
+                android:id="@+id/editText_Estate_type"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
-                android:clickable="false"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:focusable="false"
                 android:hint="@string/estate_type"
-                android:inputType="none"
                 android:paddingBottom="8dp"
                 android:textSize="12sp" />
 
@@ -65,6 +62,7 @@
                 android:layout_width="140dp"
                 android:layout_height="40dp"
                 android:hint="@string/surface"
+                android:inputType="number"
                 android:paddingBottom="8dp"
                 android:singleLine="true"
                 android:textSize="12sp" />
@@ -319,7 +317,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_stores"
+            android:id="@+id/search_box_stores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_margin"
@@ -331,26 +329,26 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_park"
+            android:id="@+id/search_box_park"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_margin"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/park"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/box_stores"
-            app:layout_constraintTop_toTopOf="@+id/box_stores" />
+            app:layout_constraintStart_toEndOf="@+id/search_box_stores"
+            app:layout_constraintTop_toTopOf="@+id/search_box_stores" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_restaurants"
+            android:id="@+id/search_box_restaurants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_margin"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/restaurants"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/box_park"
-            app:layout_constraintTop_toTopOf="@+id/box_park" />
+            app:layout_constraintStart_toEndOf="@+id/search_box_park"
+            app:layout_constraintTop_toTopOf="@+id/search_box_park" />
 
         <androidx.appcompat.widget.AppCompatTextView
 
@@ -397,6 +395,7 @@
                 android:layout_height="40dp"
                 android:hint="@string/estate_entry_date"
                 android:inputType="date"
+                android:focusable="false"
                 android:paddingBottom="8dp"
                 android:textSize="14sp"
                 />
@@ -426,6 +425,7 @@
                 android:layout_height="40dp"
                 android:hint="@string/estate_sold_date"
                 android:inputType="date"
+                android:focusable="false"
                 android:paddingBottom="8dp"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -447,14 +447,12 @@
             >
 
             <AutoCompleteTextView
-                android:id="@+id/spinner_agent"
+                android:id="@+id/editText_agent"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:clickable="false"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="Real Estate Agent Name"
-                android:inputType="none"
                 android:paddingBottom="8dp"
                 android:textSize="12sp" />
         </com.google.android.material.textfield.TextInputLayout>

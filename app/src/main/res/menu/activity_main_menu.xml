@@ -18,5 +18,12 @@
 
     </item>
 
+    <item
+        android:id="@+id/loan_btn"
+        android:icon="@drawable/ic_loan"
+        app:showAsAction="always"
+        android:title="@string/loan">
+    </item>
+
 
 </menu>

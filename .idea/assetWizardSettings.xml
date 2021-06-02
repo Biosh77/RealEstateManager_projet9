@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\Meunier\AppData\Local\Temp\baseline_accessibility_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\Meunier\AppData\Local\Temp\baseline_account_balance_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                                 <entry key="paddingPercent" value="-5" />
                                               </map>
@@ -37,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$PROJECT_DIR$/../../Android/sdk/icons/material/materialicons/accessibility/baseline_accessibility_24.xml" />
+                                                <entry key="url" value="file:/$PROJECT_DIR$/../../Android/sdk/icons/material/materialicons/account_balance/baseline_account_balance_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -69,7 +69,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_test" />
+                                      <entry key="outputName" value="ic_loan" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>
@@ -312,6 +312,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>

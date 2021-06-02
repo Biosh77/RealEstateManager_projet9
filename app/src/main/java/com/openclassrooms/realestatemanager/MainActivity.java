@@ -10,13 +10,19 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment;
 import com.openclassrooms.realestatemanager.ui.list.ListFragment;
-import com.openclassrooms.realestatemanager.ui.map.MapActivity;
+import com.openclassrooms.realestatemanager.ui.loansimulator.LoanSimulatorActivity;
+import com.openclassrooms.realestatemanager.ui.map.MapsActivity;
 import com.openclassrooms.realestatemanager.ui.search.SearchActivity;
+import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
+
+import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment listFragment;
     private Fragment detailFragment;
     private FloatingActionButton addEstate;
+    private EstateViewModel estateViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.addEstate = findViewById(R.id.add_form_button);
 
+        configureViewModel();
         configureAndShowListFragment();
         configureAndShowDetailFragment();
         configureToolbar();
@@ -48,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
     }
 
+
+    private void configureViewModel(){
+        estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
+    }
+
+
+
+
     /**
      * For click on button on toolbar
      *
@@ -62,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_btn:
                 Intent editIntent = new Intent(this, CreateOrEditActivity.class);
+                editIntent.putExtra(PARAM_EDIT,true);
                 startActivity(editIntent);
                 return true;
             case R.id.search_btn:
@@ -69,8 +86,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(searchIntent);
                 return true;
             case R.id.map_btn:
-                Intent mapIntent = new Intent(this, MapActivity.class);
+                Intent mapIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapIntent);
+                return true;
+            case R.id.loan_btn:
+                Intent loanIntent = new Intent(this, LoanSimulatorActivity.class);
+                startActivity(loanIntent);
                 return true;
             default:
                 return
@@ -98,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent formIntent = new Intent(getApplicationContext(), CreateOrEditActivity.class);
+                formIntent.putExtra(PARAM_EDIT,false);
                 startActivity(formIntent);
             }
         });

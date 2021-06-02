@@ -40,4 +40,9 @@ public class EstateDataRepository {
         estateDAO.updateEstate(estate);
     }
 
+    // --- DELETE ---
+
+    public int deleteEstate(long estateID){
+        return this.estateDAO.deleteEstate(estateID);
+    }
 }

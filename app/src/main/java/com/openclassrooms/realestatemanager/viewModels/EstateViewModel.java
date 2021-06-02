@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager;
+package com.openclassrooms.realestatemanager.viewModels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -43,7 +43,11 @@ public class EstateViewModel extends ViewModel {
         executor.execute(() -> {
             estateDataSource.updateEstate(estate);
         });
-
     }
+
+    public int deleteEstate(long estateID) {
+        return estateDataSource.deleteEstate(estateID);
+    }
+
 
 }

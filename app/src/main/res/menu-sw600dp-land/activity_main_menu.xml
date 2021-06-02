@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/edit_btn"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="ifRoom"
+        android:title="@string/edit">
+    </item>
+
+    <item
+        android:id="@+id/search_btn"
+        android:icon="@drawable/ic_search_filter"
+        app:showAsAction="always"
+        android:title="@string/search">
+    </item>
+
+    <item
+        android:id="@+id/map_btn"
+        android:icon="@drawable/ic_map"
+        app:showAsAction="ifRoom"
+        android:title="@string/map">
+    </item>
+
+    <item
+        android:id="@+id/loan_btn"
+        android:icon="@drawable/ic_loan"
+        app:showAsAction="always"
+        android:title="@string/loan">
+    </item>
+
+</menu>

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
 
+import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
+
 public class DetailActivity extends AppCompatActivity {
 
 
@@ -19,7 +21,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detail);
 
         configureAndShowDetailFragment();
 
@@ -59,6 +61,7 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_btn:
                 Intent editIntent = new Intent(this, CreateOrEditActivity.class);
+                editIntent.putExtra(PARAM_EDIT,true);
                 startActivity(editIntent);
                 return true;
             default:

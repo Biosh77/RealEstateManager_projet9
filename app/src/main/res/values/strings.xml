@@ -2,13 +2,12 @@
     <string name="app_name">Real Estate Manager</string>
 
 
-
     <!-- Menu toolbar-->
 
     <string name="edit">Edit</string>
     <string name="validate_menu">Validate</string>
     <string name="map">Map</string>
-
+    <string name="loan">loan</string>
 
     <!-- detail/form-->
 
@@ -30,6 +29,8 @@
     <string name="address">Address</string>
     <string name="postal_code">Postal Code</string>
 
+    <string name="createEstate"> The Estate is created</string>
+    <string name="updateEstate"> The Estate is updated </string>
 
     <!-- search -->
 
@@ -63,6 +64,20 @@
         <item>Neil Young</item>
     </string-array>
 
+
+
+
+    <string name="title_activity_maps">Map</string>
+
+    <!-- loan simulator -->
+
+    <string name="loan_simulator">Loan simulator :</string>
+    <string name="loan_amount">Loan amount</string>
+    <string name="personal_contribution">Personal contribution</string>
+    <string name="rate">Rate (%)</string>
+    <string name="length_years">Length ( years )</string>
+    <string name="loan_calculation">Loan calculation</string>
+    <string name="monthly_payment">Monthly payment :</string>
 
 
 

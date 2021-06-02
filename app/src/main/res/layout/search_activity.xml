@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <include
-            android:id="@+id/search_toolbar"
+            android:id="@+id/toolbar"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -28,7 +28,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <AutoCompleteTextView
                 android:id="@+id/search_spinner_Estate"
@@ -236,11 +236,11 @@
             app:startIconDrawable="@drawable/ic_calendar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_et_upOfSaleDateMini"
+                android:id="@+id/search_et_minDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="false"
-                android:hint="Min Up of sale Date"
+                android:hint="Min Date"
                 android:inputType="date"
                 android:paddingBottom="8dp"
                 android:singleLine="true"
@@ -262,11 +262,11 @@
             app:startIconDrawable="@drawable/ic_calendar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_et_upOfSaleDateMaxi"
+                android:id="@+id/search_et_maxDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="false"
-                android:hint="Max Up of Sale Date"
+                android:hint="Max Date"
                 android:inputType="date"
                 android:paddingBottom="8dp"
                 android:singleLine="true"
@@ -318,7 +318,7 @@
             app:layout_constraintTop_toBottomOf="@+id/search_photo" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_schools"
+            android:id="@+id/search_box_schools"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
@@ -330,40 +330,40 @@
             app:layout_constraintTop_toTopOf="@+id/search_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_stores"
+            android:id="@+id/search_box_stores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/item_margin"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/stores"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/box_schools"
-            app:layout_constraintStart_toEndOf="@+id/box_schools"
-            app:layout_constraintTop_toTopOf="@+id/box_schools" />
+            app:layout_constraintBottom_toBottomOf="@+id/search_box_schools"
+            app:layout_constraintStart_toEndOf="@+id/search_box_schools"
+            app:layout_constraintTop_toTopOf="@+id/search_box_schools" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_park"
+            android:id="@+id/search_box_park"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/park"
             android:layout_marginTop="@dimen/item_margin"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/box_schools"
+            app:layout_constraintEnd_toEndOf="@+id/search_box_schools"
             app:layout_constraintStart_toEndOf="@+id/search_nearby_points"
-            app:layout_constraintTop_toBottomOf="@+id/box_schools" />
+            app:layout_constraintTop_toBottomOf="@+id/search_box_schools" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/box_restaurants"
+            android:id="@+id/search_box_restaurants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/restaurants"
             android:textSize="12sp"
             android:layout_marginLeft="@dimen/item_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/box_park"
-            app:layout_constraintStart_toEndOf="@+id/box_park"
-            app:layout_constraintTop_toTopOf="@+id/box_park" />
+            app:layout_constraintBottom_toBottomOf="@+id/search_box_park"
+            app:layout_constraintStart_toEndOf="@+id/search_box_park"
+            app:layout_constraintTop_toTopOf="@+id/search_box_park" />
 
         <androidx.appcompat.widget.AppCompatTextView
 
@@ -382,7 +382,7 @@
             app:layout_constraintTop_toBottomOf="@+id/search_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/available_box"
+            android:id="@+id/available_sold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
