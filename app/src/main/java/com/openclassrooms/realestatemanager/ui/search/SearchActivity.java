@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.search;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -18,13 +19,24 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.injection.Injection;
+import com.openclassrooms.realestatemanager.injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.models.SearchEstates;
+import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
+import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
+import com.openclassrooms.realestatemanager.viewModels.SearchViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -45,7 +57,8 @@ public class SearchActivity extends AppCompatActivity {
     private MaterialCheckBox boxRestaurants;
     private MaterialCheckBox boxParks;
     private MaterialCheckBox isSold;
-
+    private SearchEstates searchEstates;
+    SearchViewModel searchViewModel;
 
 
     @Override
@@ -74,9 +87,14 @@ public class SearchActivity extends AppCompatActivity {
 
         dropDownAdapters();
         configureToolbar();
+        configureViewModel();
         setCalendar();
         onTouch();
 
+    }
+
+    private void configureViewModel() {
+       searchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getApplicationContext())).get(SearchViewModel.class);
     }
 
 
@@ -115,11 +133,100 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.menu_validate_activity_check) {
-
+           showSearch();
+            Intent intent = new Intent(this, SearchResultActivity.class);
+            intent.putExtra("SearchEstate",searchEstates);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private void showSearch() {
+        searchEstates = new SearchEstates();
+
+        if (!type.getText().toString().isEmpty()) {
+            String estateType = type.getText().toString();
+            searchEstates.setEstateType(estateType);
+        }
+
+        if (!city.getText().toString().isEmpty()) {
+            String estateCity = city.getText().toString();
+            searchEstates.setCity(estateCity);
+        }
+
+        if (!minRooms.getText().toString().isEmpty()) {
+            Integer estateMinRooms = Integer.parseInt(minRooms.getText().toString());
+            searchEstates.setMinRooms(estateMinRooms);
+        }
+
+        if (!maxRooms.getText().toString().isEmpty()) {
+            Integer estateMaxRooms = Integer.parseInt(maxRooms.getText().toString());
+            searchEstates.setMaxRooms(estateMaxRooms);
+        }
+
+        if (!minSurface.getText().toString().isEmpty()) {
+            Integer estateMinSurface = Integer.parseInt(minSurface.getText().toString());
+            searchEstates.setMinSurface(estateMinSurface);
+        }
+
+        if (!maxSurface.getText().toString().isEmpty()) {
+            Integer estateMaxSurface = Integer.parseInt(maxSurface.getText().toString());
+            searchEstates.setMaxSurface(estateMaxSurface);
+        }
+
+        if (!minPrice.getText().toString().isEmpty()) {
+            Double estateMinPrice = Double.parseDouble(minPrice.getText().toString());
+            searchEstates.setMinPrice(estateMinPrice);
+        }
+
+        if (!maxPrice.getText().toString().isEmpty()) {
+            Double estateMaxPrice = Double.parseDouble(maxPrice.getText().toString());
+            searchEstates.setMaxPrice(estateMaxPrice);
+        }
+
+        if (!minDate.getText().toString().isEmpty()) {
+            String estateMinDate = minDate.getText().toString();
+            searchEstates.setMinDate(estateMinDate);
+        }
+
+        if (!maxDate.getText().toString().isEmpty()) {
+            String estateMaxDate =maxDate.getText().toString();
+            searchEstates.setMaxDate(estateMaxDate);
+        }
+
+        if (!showingPictures.isChecked()) {
+            boolean estatePicturesShow = showingPictures.isChecked();
+            searchEstates.setPhotos(estatePicturesShow);
+        }
+
+        if (boxSchools.isChecked()) {
+            boolean estateSchool = boxSchools.isChecked();
+            searchEstates.setSchools(estateSchool);
+        }
+
+        if (boxParks.isChecked()) {
+            boolean estatePark = boxParks.isChecked();
+            searchEstates.setPark(estatePark);
+        }
+
+        if (boxRestaurants.isChecked()) {
+            boolean estateRestaurant= boxRestaurants.isChecked();
+            searchEstates.setRestaurants(estateRestaurant);
+        }
+
+        if (boxStores.isChecked()) {
+            boolean estateStore= boxStores.isChecked();
+            searchEstates.setStores(estateStore);
+        }
+
+        if (isSold.isChecked()) {
+            boolean estateSold = isSold.isChecked();
+            searchEstates.setSold(estateSold);
+        }
+    }
+
 
 
 
@@ -146,7 +253,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-       maxDate.setOnTouchListener(new View.OnTouchListener() {
+        maxDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mMaxDate.show();
@@ -174,7 +281,6 @@ public class SearchActivity extends AppCompatActivity {
             maxDate.setText(sdf.format(newDate.getTime()));
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
-
 
 
 }

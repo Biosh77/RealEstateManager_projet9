@@ -7,8 +7,11 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RawQuery;
 import androidx.room.Update;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.openclassrooms.realestatemanager.models.Estate;
 
@@ -23,6 +26,7 @@ public interface EstateDAO {
     @Insert
     long insertEstate(Estate estate);
 
+    //(onConflict = OnConflictStrategy.REPLACE)
     @Update
     int updateEstate(Estate estate);
 
@@ -32,10 +36,17 @@ public interface EstateDAO {
     @Query("DELETE FROM Estate WHERE estateID = :estateID")
     int deleteEstate(long estateID);
 
-
     //For ContentProvider
     @Query("SELECT * FROM Estate WHERE estateID = :estateID")
     Cursor getEstateWithCursor(long estateID);
+
+    //For Search
+    @RawQuery(observedEntities = Estate.class)
+    LiveData<List<Estate>> getSearchEstates(SupportSQLiteQuery query);
+
+
+    //requete sql avec param if or == etc
+
 
 
 

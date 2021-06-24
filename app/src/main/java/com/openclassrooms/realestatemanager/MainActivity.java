@@ -10,10 +10,13 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.openclassrooms.realestatemanager.injection.Injection;
+import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment;
 import com.openclassrooms.realestatemanager.ui.list.ListFragment;
@@ -21,6 +24,8 @@ import com.openclassrooms.realestatemanager.ui.loansimulator.LoanSimulatorActivi
 import com.openclassrooms.realestatemanager.ui.map.MapsActivity;
 import com.openclassrooms.realestatemanager.ui.search.SearchActivity;
 import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
+
+import java.util.List;
 
 import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
 
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment detailFragment;
     private FloatingActionButton addEstate;
     private EstateViewModel estateViewModel;
+    private Estate estate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +63,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void configureViewModel(){
+    private void configureViewModel() {
         estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
+        estateViewModel.getEstates().observe(this, estates -> {
+            for (int i = 0; i < estates.size(); i++) {
+                   estate = estates.get(i);
+                }
+        });
     }
-
-
 
 
     /**
@@ -74,11 +83,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
+
         //Handle actions on menu items
         switch (item.getItemId()) {
             case R.id.edit_btn:
                 Intent editIntent = new Intent(this, CreateOrEditActivity.class);
-                editIntent.putExtra(PARAM_EDIT,true);
+                editIntent.putExtra(PARAM_EDIT, true);
+                editIntent.putExtra("estateEditId", estate.getEstateID());
                 startActivity(editIntent);
                 return true;
             case R.id.search_btn:
@@ -119,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent formIntent = new Intent(getApplicationContext(), CreateOrEditActivity.class);
-                formIntent.putExtra(PARAM_EDIT,false);
+                formIntent.putExtra(PARAM_EDIT, false);
                 startActivity(formIntent);
             }
         });
@@ -149,5 +160,6 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
 
 }

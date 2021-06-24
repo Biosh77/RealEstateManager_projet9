@@ -1,14 +1,19 @@
 package com.openclassrooms.realestatemanager.ui.detail;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
 
 import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
@@ -17,14 +22,31 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private Fragment detailFragment;
+    private Estate estate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+
+        configureToolbar();
         configureAndShowDetailFragment();
 
+
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        ActionBar ab = getSupportActionBar();
+        assert ab != null;
+        ab.setTitle("Estate Description");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
     }
 
 
@@ -58,16 +80,20 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Handle actions on menu items
-        switch (item.getItemId()) {
-            case R.id.edit_btn:
-                Intent editIntent = new Intent(this, CreateOrEditActivity.class);
-                editIntent.putExtra(PARAM_EDIT,true);
-                startActivity(editIntent);
-                return true;
-            default:
-                return
-                        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+            return true;
         }
+        if (item.getItemId() == R.id.edit_btn) {
+            int estate = getIntent().getIntExtra("estate",0);
+            Intent editIntent = new Intent(this, CreateOrEditActivity.class);
+            editIntent.putExtra(PARAM_EDIT, true);
+            editIntent.putExtra("estateEditId", estate);
+            startActivity(editIntent);
+            return true;
+        }
+        return
+                super.onOptionsItemSelected(item);
     }
 
 

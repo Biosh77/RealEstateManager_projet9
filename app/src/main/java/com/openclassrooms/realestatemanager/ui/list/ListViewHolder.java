@@ -21,6 +21,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     private final TextView itemType;
     private final TextView itemCity;
     private final TextView itemPrice;
+    private ImageView itemSold;
 
 
     public ListViewHolder(@NonNull View itemView) {
@@ -30,6 +31,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         itemType = itemView.findViewById(R.id.item_title);
         itemCity = itemView.findViewById(R.id.item_subtitle);
         itemPrice = itemView.findViewById(R.id.item_price);
+        itemSold = itemView.findViewById(R.id.item_sold);
 
     }
 
@@ -44,6 +46,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         //Price
         String price = "$"+NumberFormat.getInstance(Locale.US).format(estate.getPrice());
         itemPrice.setText(price);
+        //Sold or not
+        if (estate.getSold()){
+            itemSold.setImageResource(R.drawable.sold);
+        }
         //Photo glide
 
 

@@ -2,11 +2,10 @@ package com.openclassrooms.realestatemanager.geocodingRetrofitAPI.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.transform.Result;
-
-public class Geocoding {
+public class Geocoding implements Serializable {
 
     @SerializedName("results")
     private List<Result> results;

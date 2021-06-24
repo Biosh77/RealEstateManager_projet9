@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.repositories;
 
 import androidx.lifecycle.LiveData;
+import androidx.sqlite.db.SimpleSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.openclassrooms.realestatemanager.database.dao.EstateDAO;
 import com.openclassrooms.realestatemanager.models.Estate;
@@ -45,4 +47,12 @@ public class EstateDataRepository {
     public int deleteEstate(long estateID){
         return this.estateDAO.deleteEstate(estateID);
     }
+
+    // --- SEARCH ---
+
+    public LiveData<List<Estate>> getSearchEstates(String queryString, List<Object> args){
+        SupportSQLiteQuery query = new SimpleSQLiteQuery(queryString,args.toArray());
+        return estateDAO.getSearchEstates(query);
+    }
+
 }

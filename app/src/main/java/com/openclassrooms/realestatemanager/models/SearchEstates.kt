@@ -12,12 +12,17 @@ data class SearchEstates(
         var maxSurface: Int?,
         var minPrice: Double?,
         var maxPrice: Double?,
-        var minDate: Long?,
-        var maxDate: Long?,
+        var minDate: String?,
+        var maxDate: String?,
         var photos: Boolean,
         var schools: Boolean,
         var stores: Boolean,
         var park: Boolean,
         var restaurants: Boolean,
         var sold: Boolean
-        ) : Serializable
+        ) : Serializable {
+        constructor() : this("", "", null, null, null, null, null, null, null, null,
+        false, false, false, false, false, false)
+
+
+}

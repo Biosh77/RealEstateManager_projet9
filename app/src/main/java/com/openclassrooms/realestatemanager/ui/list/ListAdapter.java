@@ -1,8 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.list;
 
 import android.content.Context;
-import android.location.Location;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +22,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
     private List<Estate> estateList;
     private RequestManager glide;
     OnEstateClickListener listener;
+    public static int selected_item = 0;
 
 
 
@@ -58,7 +60,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         holder.itemView.setOnClickListener(v ->{
             Estate estate = estateList.get(position);
             listener.onEstateClick(estate);
+
+            selected_item = position;
+            notifyDataSetChanged();
+
         });
+
+        if (selected_item == position ) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#E5E5E5"));
+
+
+        } else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
     }
 
 

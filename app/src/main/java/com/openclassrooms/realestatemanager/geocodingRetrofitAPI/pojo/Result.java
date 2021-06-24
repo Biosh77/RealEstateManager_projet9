@@ -2,9 +2,10 @@ package com.openclassrooms.realestatemanager.geocodingRetrofitAPI.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Result {
+public class Result implements Serializable {
     @SerializedName("address_components")
     private List<AddressComponent> addressComponents = null;
     @SerializedName("formatted_address")

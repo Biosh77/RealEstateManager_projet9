@@ -64,7 +64,7 @@ public class SearchResultActivity extends AppCompatActivity {
             searchResultFragment = new SearchResultFragment();
             //Add it to FrameLayout container
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.detail_fragment_frameLayout, searchResultFragment)
+                    .add(R.id.searchResult_fragment_frameLayout, searchResultFragment)
                     .commit();
         }
     }

@@ -23,6 +23,4 @@ public interface GeocodingApiService {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build();
-
-
 }

@@ -80,7 +80,7 @@
             android:layout_alignParentEnd="true"
             app:boxStrokeColor="@color/colorAccent"
             app:errorEnabled="true"
-            app:helperText="Required*"
+            app:helperText="Required"
             app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_estate_type">
@@ -364,8 +364,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/box_schools" />
 
-        <RadioButton
-            android:id="@+id/available_radiobtn"
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/isSold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
@@ -415,6 +415,7 @@
             app:errorEnabled="true"
             android:layout_marginTop="@dimen/item_margin"
             app:helperTextEnabled="true"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/layout_entryDate"
             app:layout_constraintTop_toBottomOf="@+id/layout_entryDate"
             app:startIconDrawable="@drawable/ic_calendar">
@@ -426,6 +427,7 @@
                 android:hint="@string/estate_sold_date"
                 android:inputType="date"
                 android:focusable="false"
+                android:visibility="gone"
                 android:paddingBottom="8dp"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -10,6 +10,7 @@ import android.os.Build;
 
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -42,7 +43,8 @@ public class Utils {
      * @return
      */
     public static String getTodayDate() {
-        DateFormat dateFormat =  new SimpleDateFormat("dd/MM/yyy", Locale.FRANCE);;
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy", Locale.FRANCE);
+        ;
         return dateFormat.format(new Date());
     }
 
@@ -57,16 +59,10 @@ public class Utils {
         // WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         // return wifi.isWifiEnabled();
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Network nw = connectivityManager.getActiveNetwork();
-            if (nw == null) return false;
-            NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
-            return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
-        } else {
-            NetworkInfo nwInfo = connectivityManager.getActiveNetworkInfo();
-            return nwInfo != null && nwInfo.isConnected();
-        }
+        NetworkInfo nwInfo = connectivityManager.getActiveNetworkInfo();
+        return nwInfo != null && nwInfo.isConnected();
     }
+
 
 }
 

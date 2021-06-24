@@ -75,7 +75,7 @@
             app:boxStrokeColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintTop_toBottomOf="@+id/search_city"
             app:suffixTextColor="#000000">
@@ -125,7 +125,7 @@
             app:boxStrokeColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintTop_toBottomOf="@+id/search_RoomsMin"
             app:suffixText="m²"
@@ -177,7 +177,7 @@
             app:boxStrokeColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintTop_toBottomOf="@+id/search_SurfaceMin"
             app:suffixText="$"
@@ -230,7 +230,7 @@
             app:boxStrokeColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintTop_toBottomOf="@+id/search_PriceMin"
             app:startIconDrawable="@drawable/ic_calendar">
@@ -284,7 +284,7 @@
             android:textSize="12sp"
             android:textStyle="bold"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_upOfSaleDateMini" />
@@ -312,7 +312,7 @@
             android:layout_marginTop="@dimen/default_margin"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginLeft="45dp"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_photo" />
@@ -321,13 +321,13 @@
             android:id="@+id/search_box_schools"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginLeft="20dp"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/schools"
             android:textSize="12sp"
-            android:layout_marginLeft="@dimen/item_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/search_nearby_points"
-            app:layout_constraintStart_toEndOf="@+id/search_nearby_points"
-            app:layout_constraintTop_toTopOf="@+id/search_nearby_points" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/search_box_stores"
@@ -346,12 +346,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
+            android:layout_marginTop="@dimen/default_margin"
             android:text="@string/park"
-            android:layout_marginTop="@dimen/item_margin"
+            android:layout_marginLeft="@dimen/default_margin"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/search_box_schools"
-            app:layout_constraintStart_toEndOf="@+id/search_nearby_points"
-            app:layout_constraintTop_toBottomOf="@+id/search_box_schools" />
+            app:layout_constraintBottom_toBottomOf="@+id/search_box_stores"
+            app:layout_constraintStart_toEndOf="@+id/search_box_stores"
+            app:layout_constraintTop_toBottomOf="@+id/search_nearby_points" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/search_box_restaurants"
@@ -368,15 +369,15 @@
         <androidx.appcompat.widget.AppCompatTextView
 
             android:id="@+id/estate_status"
-            android:layout_width="90dp"
+            android:layout_width="92dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/box_schools"
             android:text="@string/still_available"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="60dp"
             android:textStyle="bold"
-            android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_nearby_points" />
@@ -388,10 +389,9 @@
             android:buttonTint="@color/colorPrimary"
             android:text="@string/sold"
             android:textSize="12sp"
-            android:layout_marginLeft="@dimen/default_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/estate_status"
-            app:layout_constraintStart_toEndOf="@+id/estate_status"
-            app:layout_constraintTop_toTopOf="@+id/estate_status" />
+            app:layout_constraintEnd_toEndOf="@+id/estate_status"
+            app:layout_constraintStart_toStartOf="@+id/estate_status"
+            app:layout_constraintTop_toBottomOf="@+id/estate_status" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
