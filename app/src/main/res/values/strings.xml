@@ -35,7 +35,7 @@
     <!-- search -->
 
     <string name="search">Search</string>
-    <string name="showing_estate_pictures">Showing estate pictures ? :</string>
+    <string name="showing_estate_pictures">Has pictures ? :</string>
     <string name="choose_the_points_of_interest">Choose the points of interest:</string>
     <string name="sold">Sold</string>
     <string name="still_available">Still available ?</string>
@@ -50,7 +50,7 @@
 
     <!-- spinner -->
 
-    <string-array name="estate_type">
+    <string-array name="estate_type" >
         <item>House</item>
         <item>Flat</item>
         <item>Penthouse</item>

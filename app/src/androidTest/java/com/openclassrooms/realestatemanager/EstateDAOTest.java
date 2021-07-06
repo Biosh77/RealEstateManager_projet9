@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -45,6 +46,7 @@ public class EstateDAOTest {
         try {
             this.estateDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
                     EstateDataBase.class)
+                    .setTransactionExecutor(Executors.newSingleThreadExecutor())
                     .allowMainThreadQueries()
                     .build();
         } catch (Exception e) {
@@ -57,6 +59,7 @@ public class EstateDAOTest {
         estateDatabase.close();
     }
 
+
     @Test
     public void insertAndGetEstate() throws InterruptedException {
         //adding demo
@@ -68,10 +71,11 @@ public class EstateDAOTest {
     }
 
     @Test
-    public void getEstateWhenNoItemInserted() throws InterruptedException {
+    public void getEstateWhenNoEstateInserted() throws InterruptedException {
         //test
         List<Estate> estatesList = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstates());
         assertTrue(estatesList.isEmpty());
     }
+
 
 }

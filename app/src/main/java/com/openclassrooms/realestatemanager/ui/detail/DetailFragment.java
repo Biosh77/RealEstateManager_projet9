@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.detail;
 
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,24 +118,16 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             this.estateViewModel.getEstate(estateId).observe(getActivity(),
                     (Estate estate) -> {
                         DetailFragment.this.updateUi(estate);
-                        //createStringForAddress();
+                        String address = estate.getAddress();
+                        String postalCode = Objects.requireNonNull(estate.getPostalCode()).toString();
+                        String city = estate.getCity();
+                        completeAddress = address + "," + postalCode + "," + city;
+
+                        executeHttpRequestWithRetrofit();
+
                     });
         }
     }
-
-/*
-    private void createStringForAddress(){
-       Estate estate = (Estate) getActivity().getIntent().getSerializableExtra("estate2");
-        String address = estate.getAddress();
-        String postalCode = Objects.requireNonNull(estate.getPostalCode()).toString();
-        String city = estate.getCity();
-        completeAddress = address + "," + postalCode + "," + city;
-
-        Log.d("completeAddress","completeAddress" + completeAddress);
-
-    }
-
- */
 
 
     public void updateUi(Estate estate){
@@ -204,7 +197,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setMapToolbarEnabled(true);
             googleMap.moveCamera(CameraUpdateFactory.zoomBy(12));
-            executeHttpRequestWithRetrofit();
         }else {
             Toast.makeText(getContext(),"No internet", Toast.LENGTH_SHORT).show();
         }
@@ -220,16 +212,17 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
 
                     @Override
-                    public void onNext(Geocoding geocoding) {
-
+                    public void onNext(Geocoding geocoding)  {
+                        Log.d("executeHttp", "executeHttp : " + geocoding.getResults());
                         result = geocoding.getResults();
+
                     }
 
                     @Override
                     public void onComplete() {
                         if (completeAddress != null) {
-
                             positionMarker(result);
+
                         }
                     }
 
@@ -273,5 +266,4 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
-
 }

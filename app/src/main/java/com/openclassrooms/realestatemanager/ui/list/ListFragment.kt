@@ -72,17 +72,7 @@ class ListFragment : Fragment(), ListAdapter.OnEstateClickListener {
 
         } else {
 
-
-/*
-            val intent = Intent(activity, DetailActivity::class.java).apply { putExtra("estate", estate) }
-            startActivity(intent)
-
- */
-
-            val intent = Intent(activity,DetailActivity::class.java)
-
-            intent.putExtra("estate",estate.estateID)
-            intent.putExtra("estate2",estate)
+            val intent = Intent(activity, DetailActivity::class.java).apply { putExtra("estate", estate.estateID) }
             startActivity(intent)
 
        }

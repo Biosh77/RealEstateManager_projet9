@@ -17,7 +17,7 @@ import com.openclassrooms.realestatemanager.models.EstateKt;
 
 public class EstateProvider extends ContentProvider {
 
-    public static final String AUTHORITY = "com.openclassrooms.realestatemanager.contentProvider";
+    public static final String AUTHORITY = "com.openclassrooms.realestatemanager.contentProvider.EstateProvider";
     public static final String TABLE_NAME = Estate.class.getSimpleName();
     public static final Uri URI_ESTATE = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
 

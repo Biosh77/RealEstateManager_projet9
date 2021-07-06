@@ -53,7 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private EstateViewModel estateViewModel;
-    protected static final int PERMS = 100;
+    protected static final int PERMS = 200;
     private LocationManager locationManager;
     private String completeAddress;
     private List<String> listAddress = new ArrayList<>();
@@ -85,7 +85,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChanged(List<Estate> estates) {
                 createStringForAddress(estates);
+                executeHttpRequestWithRetrofit();
+                Log.d("bla", "bla : " + estates);
             }
+
         });
     }
 
@@ -107,11 +110,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             idlist.add(id);
 
         }
-        if (Utils.isInternetAvailable(this)) {
-            executeHttpRequestWithRetrofit();
-        } else {
-            Toast.makeText(getApplicationContext(), "No internet", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void executeHttpRequestWithRetrofit() {
@@ -123,7 +121,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng latLng = new LatLng(geocoding.getResults().get(0).getGeometry().getLocation().getLatitude(), geocoding.getResults().get(0).getGeometry().getLocation().getLongitude());
                     Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(geocoding.getResults().get(0).getFormattedAddress()));
                     marker.setTag(idlist.get(listAddress.indexOf(address)));
-
                 }
 
                 @Override
@@ -231,6 +228,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mMap!=null){
             LatLng mLocation = new LatLng(mLatitude,mLongitude);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mLocation));
+
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
+
 @Entity
 data class Estate(
         var estateType: String? = "",
@@ -25,8 +26,7 @@ data class Estate(
         var entryDateEstate: String? = "",
         var soldDate: String? = "",
         var agentName: String = "",
-        //var photoList:,
-        //var photoDescription:,
+        //var hasPictures: Boolean = false,
 
 ) : Serializable {
     @PrimaryKey(autoGenerate = true)
@@ -36,6 +36,9 @@ data class Estate(
 }
 
 fun fromContentValues(values: ContentValues): Estate {
+
+
+
     val estate = Estate()
 
     if (values.containsKey("estateType")) estate.estateType = values.getAsString("estateType")

@@ -7,10 +7,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.openclassrooms.realestatemanager.database.dao.EstateDAO;
+import com.openclassrooms.realestatemanager.database.dao.PictureDAO;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.Picture;
 
 
-@Database(entities = {Estate.class}, version = 1, exportSchema = false)
+@Database(entities = {Estate.class,Picture.class}, version = 1, exportSchema = false)
 public abstract class EstateDataBase extends RoomDatabase  {
 
 
@@ -20,6 +22,7 @@ public abstract class EstateDataBase extends RoomDatabase  {
 
     // --- DAO ---
     public abstract EstateDAO estateDAO();
+    public abstract PictureDAO pictureDAO();
 
 
     // --- INSTANCE ---

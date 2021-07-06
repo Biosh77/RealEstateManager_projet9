@@ -1,10 +1,20 @@
 package com.openclassrooms.realestatemanager.ui.createOrEditEstate;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -21,19 +31,32 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputLayout;
+import com.openclassrooms.realestatemanager.models.Picture;
+import com.openclassrooms.realestatemanager.photo.PictureAdapter;
 import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class CreateOrEditActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,6 +68,9 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     private EstateViewModel estateViewModel;
     private Estate updateEstate;
     boolean isAllFieldsChecked = false;
+    private PictureAdapter pictureAdapter;
+    private List<Picture> pictureList = new ArrayList<>();
+    private static final int RESULT_LOAD_IMG = 100 ;
 
     AutoCompleteTextView agent;
     AutoCompleteTextView type;
@@ -65,6 +91,9 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     private TextView entryDate;
     private TextView soldDate;
     private TextInputLayout soldLayout;
+    private AppCompatButton addPicture;
+    private RecyclerView recyclerViewPhotos;
+
 
 
     @Override
@@ -94,6 +123,9 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         entryDate = findViewById(R.id.entryDateEstate);
         soldDate = findViewById(R.id.soldDate);
         soldLayout = findViewById(R.id.layout_soldDate);
+        addPicture = findViewById(R.id.photo_btn);
+        recyclerViewPhotos = findViewById(R.id.rv_photo);
+
 
         //Spinner
         agent = findViewById(R.id.editText_agent);
@@ -104,7 +136,82 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         configureToolbar();
         dropDownAdapters();
         configureViewModel();
+        configureRecyclerView();
+        onClickAddPicture();
 
+    }
+
+    private void onClickAddPicture() {
+        addPicture.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"bla", Toast.LENGTH_SHORT).show();
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+
+
+        if (resultCode == RESULT_OK && reqCode == RESULT_LOAD_IMG) {
+            final Uri imageUri = data.getData();
+            Picture mPicture = new Picture(1,imageUri.toString(),""); // estate id
+            pictureAdapter.addPicture(mPicture);
+        }
+    }
+
+    /*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                        //imageView.setImageBitmap(selectedImage);
+                    }
+
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = getContentResolver().query(selectedImage,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+        }
+    }
+
+
+     */
+
+    private void configureRecyclerView() {
+        pictureAdapter = new PictureAdapter(pictureList);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewPhotos.setLayoutManager(horizontalLayoutManager);
+        recyclerViewPhotos.setAdapter(pictureAdapter);
     }
 
     @Override
@@ -163,6 +270,8 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
         agent.setAdapter(factoryAdapter(R.array.agent_name));
         type.setAdapter(factoryAdapter(R.array.estate_type));
+
+
     }
 
 
@@ -259,6 +368,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                     entryDate.getText().toString(),
                     soldDate.getText().toString(),
                     agent.getText().toString());
+
 
 
             estateViewModel.createEstate(estate);
@@ -363,10 +473,21 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-
     private boolean neededFields() {
 
-        if (type.length() == 0 && description.length() == 0 && surface.length() == 0 && rooms.length() == 0 && bathrooms.length() == 0 && bedrooms.length() == 0 && address.length() == 0 && postalCode.length() == 0 && city.length() == 0 && price.length() == 0 && agent.length() == 0) {
+        String soldDateInput = soldLayout.getEditText().getText().toString();
+
+        if (soldDateInput.isEmpty() && isSold.isChecked()) {
+            soldDate.setError("This field is required");
+            return false;
+        }
+
+
+
+
+       if (type.length() == 0 && description.length() == 0 && surface.length() == 0 && rooms.length() == 0 && bathrooms.length() == 0 && bedrooms.length() == 0 && address.length() == 0 && postalCode.length() == 0 && city.length() == 0 && price.length() == 0 && agent.length() == 0) {
+
+
             type.setError("This field is required");
             description.setError("This field is required");
             surface.setError("This field is required");
@@ -379,12 +500,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             price.setError("This field is required");
             agent.setError("This field is required");
             return false;
-        }
-
-
-        if (soldDate.length() == 0 && isSold.isChecked()){
-            soldDate.setError("This field is required");
-            return  false;
         }
 
         if (type.length() == 0) {
