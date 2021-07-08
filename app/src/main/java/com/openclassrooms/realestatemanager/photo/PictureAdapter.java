@@ -20,7 +20,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
 
 
-    private List<Picture> picturePath = new ArrayList<>();
+    private List<Picture> picturePath;
 
 
 

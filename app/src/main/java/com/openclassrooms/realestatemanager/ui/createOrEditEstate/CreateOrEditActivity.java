@@ -141,13 +141,27 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+
+    private void configureViewModel() {
+        estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
+        int estateId = getIntent().getIntExtra("estateEditId", 0);
+        if (estateId != 0)
+            estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
+                @Override
+                public void onChanged(Estate estate) {
+                    CreateOrEditActivity.this.updateEditEstate(estate);
+                }
+            });
+    }
+
+
+
     private void onClickAddPicture() {
         addPicture.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"bla", Toast.LENGTH_SHORT).show();
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
@@ -161,6 +175,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(reqCode, resultCode, data);
 
 
+
         if (resultCode == RESULT_OK && reqCode == RESULT_LOAD_IMG) {
             final Uri imageUri = data.getData();
             Picture mPicture = new Picture(1,imageUri.toString(),""); // estate id
@@ -168,44 +183,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_CANCELED) {
-            switch (requestCode) {
-                case 0:
-                    if (resultCode == RESULT_OK && data != null) {
-                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-                        //imageView.setImageBitmap(selectedImage);
-                    }
-
-                    break;
-                case 1:
-                    if (resultCode == RESULT_OK && data != null) {
-                        Uri selectedImage = data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                        if (selectedImage != null) {
-                            Cursor cursor = getContentResolver().query(selectedImage,
-                                    filePathColumn, null, null, null);
-                            if (cursor != null) {
-                                cursor.moveToFirst();
-
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                String picturePath = cursor.getString(columnIndex);
-                                //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                                cursor.close();
-                            }
-                        }
-
-                    }
-                    break;
-            }
-        }
-    }
-
-
-     */
 
     private void configureRecyclerView() {
         pictureAdapter = new PictureAdapter(pictureList);
@@ -213,6 +190,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         recyclerViewPhotos.setLayoutManager(horizontalLayoutManager);
         recyclerViewPhotos.setAdapter(pictureAdapter);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -275,17 +253,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private void configureViewModel() {
-        estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
-        int estateId = getIntent().getIntExtra("estateEditId", 0);
-        if (estateId != 0)
-            estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
-                @Override
-                public void onChanged(Estate estate) {
-                    CreateOrEditActivity.this.updateEditEstate(estate);
-                }
-            });
-    }
 
 
     /**

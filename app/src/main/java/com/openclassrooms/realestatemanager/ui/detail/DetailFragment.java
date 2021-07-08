@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.detail;
 
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,14 +29,13 @@ import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
-import com.openclassrooms.realestatemanager.viewModels.GeoViewModel;
+import com.openclassrooms.realestatemanager.utils.GeocodeStream;
 
 import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import okhttp3.internal.Util;
 
 public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
@@ -108,6 +105,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private void configureRecyclerView() {
     }
 
+
     private void configureViewModel() {
         estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(EstateViewModel.class);
 
@@ -118,9 +116,11 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             this.estateViewModel.getEstate(estateId).observe(getActivity(),
                     (Estate estate) -> {
                         DetailFragment.this.updateUi(estate);
+
                         String address = estate.getAddress();
                         String postalCode = Objects.requireNonNull(estate.getPostalCode()).toString();
                         String city = estate.getCity();
+
                         completeAddress = address + "," + postalCode + "," + city;
 
                         executeHttpRequestWithRetrofit();
@@ -174,17 +174,9 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
                school.setVisibility(View.VISIBLE);
             }
 
-
-
-
-
-
             //photos list
 
-
         }
-
-
     }
 
 
@@ -196,7 +188,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             map = googleMap;
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setMapToolbarEnabled(true);
-            googleMap.moveCamera(CameraUpdateFactory.zoomBy(12));
+            map.moveCamera(CameraUpdateFactory.zoomTo(15));
         }else {
             Toast.makeText(getContext(),"No internet", Toast.LENGTH_SHORT).show();
         }
@@ -207,13 +199,13 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
     private void executeHttpRequestWithRetrofit() {
 
-        mDisposable = GeoViewModel.FetchGeocode(completeAddress)
+        mDisposable = GeocodeStream.FetchGeocode(completeAddress)
                 .subscribeWith(new DisposableObserver<Geocoding>() {
 
 
                     @Override
                     public void onNext(Geocoding geocoding)  {
-                        Log.d("executeHttp", "executeHttp : " + geocoding.getResults());
+                        Log.d("executeHttp", "executeHttp : " + geocoding.getResults().get(0).getGeometry().getLocation());
                         result = geocoding.getResults();
 
                     }
@@ -222,7 +214,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
                     public void onComplete() {
                         if (completeAddress != null) {
                             positionMarker(result);
-
+                            Log.d("address", "address : " + completeAddress);
                         }
                     }
 
@@ -255,11 +247,16 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
      */
     public void positionMarker(List<Result> resultGeocoding) {
         map.clear();
+
         for (Result geo : resultGeocoding) {
 
-            LatLng latLng = new LatLng(geo.getGeometry().getLocation().getLatitude(),
-                    geo.getGeometry().getLocation().getLongitude()
-            );
+            double latitude = geo.getGeometry().getLocation().getLat();
+            double longitude = geo.getGeometry().getLocation().getLng();
+
+            LatLng latLng = new LatLng(latitude,longitude);
+
+            Log.d("latlngTest", "address : " + latLng); // D/latlngTest: address : lat/lng: (0.0,0.0)
+
             positionMarker = map.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             positionMarker.showInfoWindow();

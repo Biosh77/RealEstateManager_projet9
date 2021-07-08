@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,13 +20,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -33,15 +32,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.realestatemanager.geocodingRetrofitAPI.pojo.Geocoding;
 import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity;
-import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
-import com.openclassrooms.realestatemanager.viewModels.GeoViewModel;
+import com.openclassrooms.realestatemanager.utils.GeocodeStream;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,23 +46,24 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
+import static java.security.AccessController.getContext;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, Serializable {
 
     private GoogleMap mMap;
-    private EstateViewModel estateViewModel;
     protected static final int PERMS = 200;
     private LocationManager locationManager;
     private String completeAddress;
-    private List<String> listAddress = new ArrayList<>();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private List<Estate> estateList = new ArrayList<>();
-    private int id;
-    private List<Integer> idlist = new ArrayList<>();
+    private final List<String> listAddress = new ArrayList<>();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private List<Estate> estateList;
+    private final List<Integer> idList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maps_activity);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -79,52 +77,65 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void configureViewModel() {
-        estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
-
+        EstateViewModel estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
         estateViewModel.getEstates().observe(this, new Observer<List<Estate>>() {
             @Override
             public void onChanged(List<Estate> estates) {
-                createStringForAddress(estates);
-                executeHttpRequestWithRetrofit();
-                Log.d("bla", "bla : " + estates);
+                MapsActivity.this.createStringForAddress(estates);
             }
-
         });
     }
 
 
     private void createStringForAddress(List<Estate> estates) {
         estateList = estates;
-        for (Estate estate : estates) {
 
-            id = estate.getEstateID();
+        for (Estate estate : estateList) {
 
-
-
+            int id = estate.getEstateID();
             String address = estate.getAddress();
-            String postalCode = estate.getPostalCode().toString();
+            String postalCode = String.valueOf(estate.getPostalCode());
             String city = estate.getCity();
-
             completeAddress = address + "," + postalCode + "," + city;
-            listAddress.add((completeAddress));
-            idlist.add(id);
 
+            listAddress.add((completeAddress));
+            idList.add(id);
         }
+        executeHttpRequestWithRetrofit();
+
+
     }
 
     private void executeHttpRequestWithRetrofit() {
         mMap.clear();
         for (String address : listAddress) {
-            Disposable disposable = GeoViewModel.FetchGeocode(completeAddress).subscribeWith(new DisposableObserver<Geocoding>() {
+
+            Disposable disposable = GeocodeStream.FetchGeocode(address).subscribeWith(new DisposableObserver<Geocoding>() {
                 @Override
                 public void onNext(Geocoding geocoding) {
-                    LatLng latLng = new LatLng(geocoding.getResults().get(0).getGeometry().getLocation().getLatitude(), geocoding.getResults().get(0).getGeometry().getLocation().getLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(geocoding.getResults().get(0).getFormattedAddress()));
-                    marker.setTag(idlist.get(listAddress.indexOf(address)));
+
+                    double latitude = geocoding.getResults().get(0).getGeometry().getLocation().getLat();
+                    double longitude = geocoding.getResults().get(0).getGeometry().getLocation().getLng();
+
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .title(geocoding.getResults().get(0).getFormattedAddress()));
+
+
+                    marker.setTag(idList.get(listAddress.indexOf(address)));
+
+
+                    Log.d("MarkerTagTest", "Tag : " + marker.getTag());
+                    Log.d("idlistTest", "id : " + idList);
+                    Log.d("listAddressTest", "list : " + listAddress);
+                    Log.d("addressTest", "address : " + address);
                 }
 
                 @Override
-                public void onError( Throwable e) {
+                public void onError(Throwable e) {
 
                 }
 
@@ -133,11 +144,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 }
             });
-
-            Log.d("bla", "bla" + address);
             compositeDisposable.add(disposable);
-
         }
+        Log.d("mLocationTest", "Location : " + listAddress);
     }
 
 
@@ -180,18 +189,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        /*
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-         */
-
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.zoomBy(12));
+        googleMap.moveCamera(CameraUpdateFactory.zoomBy(15));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -204,32 +204,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         googleMap.setMyLocationEnabled(true);
         //For click on infoWindow and retrieve estate detail
+
+
+
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-
             @Override
-            public void onInfoWindowClick(@io.reactivex.annotations.NonNull Marker marker) {
-                int estateId = Integer.parseInt(marker.getId());
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                int estateId = Integer.parseInt(marker.getTag().toString());
 
-                for (Estate estate : estateList)
+                for (Estate estate : estateList) {
                     if (estate.getEstateID() == estateId) {
                         Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-                        intent.putExtra("estate", estate);
+                        intent.putExtra("estate", estate.getEstateID());
                         startActivity(intent);
                     }
+                }
             }
         });
     }
 
 
+
+
     @Override
     public void onLocationChanged(@NonNull Location location) {
+
         double mLatitude = location.getLatitude();
         double mLongitude = location.getLongitude();
-        if (mMap!=null){
-            LatLng mLocation = new LatLng(mLatitude,mLongitude);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(mLocation));
+        LatLng mLocation = new LatLng(mLatitude, mLongitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLocation));
 
-        }
+
     }
 
     @Override
@@ -241,6 +246,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onProviderDisabled(@NonNull String provider) {
 
     }
+
 
     @Override
     protected void onPause() {
@@ -302,6 +308,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    // view model get estates pour les avoir pour l'adresse ?
-    // will need perms pour map
 }

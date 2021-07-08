@@ -7,7 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
 
@@ -39,6 +41,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     public void updateWithData(Estate estate, RequestManager glide) {
 
 
+
         // For  type
         itemType.setText(estate.getEstateType());
         //For city
@@ -50,8 +53,11 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         if (estate.getSold()){
             itemSold.setImageResource(R.drawable.sold);
         }
-        //Photo glide
-
-
+        //Photo
+        //if (!estate.xxxx.isEmpty()){
+            //glide.load(xxxxx).apply(RequestOptions.centerCropTransform()).into(itemImage);
+        //}else {
+            glide.load(R.drawable.no_photo).apply(RequestOptions.centerCropTransform()).into(itemImage);
+        //}
     }
 }
