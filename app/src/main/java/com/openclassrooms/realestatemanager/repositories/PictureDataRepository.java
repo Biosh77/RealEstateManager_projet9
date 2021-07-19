@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.repositories;
 import androidx.lifecycle.LiveData;
 
 import com.openclassrooms.realestatemanager.database.dao.PictureDAO;
+import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.models.Picture;
 
 import java.util.List;
@@ -17,8 +18,12 @@ public class PictureDataRepository {
 
     // --- GET ---
 
-    public LiveData<List<Picture>> getPictures(int idEstate) {
+    public LiveData<List<Picture>> getPictures(String  idEstate) {
         return this.pictureDAO.getPictures(idEstate);
+    }
+
+    public LiveData<List<Picture>> getPicture() {
+        return this.pictureDAO.getPicture();
     }
 
     // --- CREATE ---

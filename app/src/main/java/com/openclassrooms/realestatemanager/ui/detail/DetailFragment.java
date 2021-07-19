@@ -1,17 +1,24 @@
 package com.openclassrooms.realestatemanager.ui.detail;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +31,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.realestatemanager.geocodingRetrofitAPI.pojo.Geocoding;
 import com.openclassrooms.realestatemanager.geocodingRetrofitAPI.pojo.Result;
+import com.openclassrooms.realestatemanager.models.Picture;
+import com.openclassrooms.realestatemanager.photo.PictureAdapter;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
 import com.openclassrooms.realestatemanager.R;
@@ -31,6 +40,9 @@ import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.utils.GeocodeStream;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +60,8 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private List<Result> result;
     private Marker positionMarker;
     private Estate estate;
+    private PictureAdapter pictureAdapter;
+    private List<Picture> pictureList = new ArrayList<>();
 
 
     private MapView mapView;
@@ -64,6 +78,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private ImageView restaurant;
     private ImageView park;
     private ImageView school;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -85,6 +100,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         restaurant = rootView.findViewById(R.id.restaurant);
         park = rootView.findViewById(R.id.park);
         school = rootView.findViewById(R.id.school);
+        recyclerView = rootView.findViewById(R.id.recyclerView_photo);
 
 
         // MAP
@@ -95,44 +111,64 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
 
         configureViewModel();
-        configureRecyclerView();
-
 
         return rootView;
     }
 
 
-    private void configureRecyclerView() {
+    private void configureRecyclerView(List<Picture> pictures) {
+        pictureAdapter = new PictureAdapter(pictures, false);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(horizontalLayoutManager);
+        recyclerView.setAdapter(pictureAdapter);
+
+
     }
 
 
     private void configureViewModel() {
         estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(EstateViewModel.class);
 
-        int estateId =  getActivity().getIntent().getIntExtra("estate",0);
+        String estateId = getActivity().getIntent().getStringExtra("estate");
 
 
-        if (estateId != 0) {
-            this.estateViewModel.getEstate(estateId).observe(getActivity(),
-                    (Estate estate) -> {
-                        DetailFragment.this.updateUi(estate);
+        estateViewModel.getPictures(estateId).observe(getActivity(), new Observer<List<Picture>>() {
+            @Override
+            public void onChanged(List<Picture> pictures) {
+                pictureList = pictures;
 
-                        String address = estate.getAddress();
-                        String postalCode = Objects.requireNonNull(estate.getPostalCode()).toString();
-                        String city = estate.getCity();
+                updatePictures(pictures);
+            }
+        });
 
-                        completeAddress = address + "," + postalCode + "," + city;
-
-                        executeHttpRequestWithRetrofit();
-
-                    });
-        }
+        this.estateViewModel.getEstate(estateId).observe(getActivity(),
+                (Estate estate) -> {
+                    DetailFragment.this.updateUi(estate);
+                    getAddress(estate);
+                });
     }
 
 
-    public void updateUi(Estate estate){
+    public void getAddress(Estate estate) {
 
-        if (estate != null){
+        if (estate != null) {
+            String address = estate.getAddress();
+            String postalCode = Objects.requireNonNull(estate.getPostalCode()).toString();
+            String city = estate.getCity();
+            completeAddress = address + "," + postalCode + "," + city;
+        }
+
+        executeHttpRequestWithRetrofit();
+    }
+
+    public void updatePictures(List<Picture> pictures) {
+        configureRecyclerView(pictures);
+    }
+
+
+    public void updateUi(Estate estate) {
+
+        if (estate != null) {
 
             description.setText(estate.getDescription());
             description.setEnabled(false);
@@ -161,25 +197,22 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             agent.setText(estate.getAgentName());
             agent.setEnabled(false);
 
-            if (estate.getStores()){
+            if (estate.getStores()) {
                 store.setVisibility(View.VISIBLE);
             }
-            if (estate.getPark()){
+            if (estate.getPark()) {
                 park.setVisibility(View.VISIBLE);
             }
-            if (estate.getRestaurants()){
+            if (estate.getRestaurants()) {
                 restaurant.setVisibility(View.VISIBLE);
             }
-            if (estate.getSchools()){
-               school.setVisibility(View.VISIBLE);
+            if (estate.getSchools()) {
+                school.setVisibility(View.VISIBLE);
             }
 
-            //photos list
 
         }
     }
-
-
 
 
     @Override
@@ -189,8 +222,8 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setMapToolbarEnabled(true);
             map.moveCamera(CameraUpdateFactory.zoomTo(15));
-        }else {
-            Toast.makeText(getContext(),"No internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No internet", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -204,7 +237,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
 
                     @Override
-                    public void onNext(Geocoding geocoding)  {
+                    public void onNext(Geocoding geocoding) {
                         Log.d("executeHttp", "executeHttp : " + geocoding.getResults().get(0).getGeometry().getLocation());
                         result = geocoding.getResults();
 
@@ -224,7 +257,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
 
-    private void dispose(){
+    private void dispose() {
         mDisposable.dispose();
     }
 
@@ -253,7 +286,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             double latitude = geo.getGeometry().getLocation().getLat();
             double longitude = geo.getGeometry().getLocation().getLng();
 
-            LatLng latLng = new LatLng(latitude,longitude);
+            LatLng latLng = new LatLng(latitude, longitude);
 
             Log.d("latlngTest", "address : " + latLng); // D/latlngTest: address : lat/lng: (0.0,0.0)
 

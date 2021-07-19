@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.ui.list;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
+import com.openclassrooms.realestatemanager.models.Picture;
 
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
+public class EstateListAdapter extends RecyclerView.Adapter<EstateListViewHolder> {
 
 
-    private List<Estate> estateList;
+    private List<FullEstate> estateList;
     private RequestManager glide;
+    private List<Picture> picturePath;
     OnEstateClickListener listener;
     public static int selected_item = 0;
 
@@ -28,15 +30,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
 
     interface OnEstateClickListener{
-        void onEstateClick(Estate estate);
+        void onEstateClick(FullEstate fullEstate);
     }
 
 
 
 
-    public ListAdapter(List<Estate> estateList, RequestManager glide,OnEstateClickListener listener) {
+    public EstateListAdapter(List<FullEstate> estateList, RequestManager glide,List<Picture> picturePath , OnEstateClickListener listener) {
         this.estateList = estateList;
         this.glide = glide;
+        this.picturePath = picturePath;
         this.listener = listener;
     }
 
@@ -45,21 +48,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
     //créer la vue à partir d'un layout
     @NonNull
     @Override
-    public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EstateListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.fragment_list_item, parent, false);
 
-        return new ListViewHolder(view);
+        return new EstateListViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EstateListViewHolder holder, int position) {
         holder.updateWithData(this.estateList.get(position),glide);
+
         holder.itemView.setOnClickListener(v ->{
-            Estate estate = estateList.get(position);
-            listener.onEstateClick(estate);
+            FullEstate fullEstate = estateList.get(position);
+            listener.onEstateClick(fullEstate);
 
             selected_item = position;
             notifyDataSetChanged();
@@ -77,11 +81,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
     }
 
 
+
     @Override
     public int getItemCount() {
         return estateList.size();
     }
 
 
-
+    public void setEstateList(List<FullEstate> estateList) {
+        this.estateList = estateList;
+        notifyDataSetChanged();
+    }
 }

@@ -17,14 +17,17 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -40,6 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.openclassrooms.realestatemanager.models.Picture;
 import com.openclassrooms.realestatemanager.photo.PictureAdapter;
@@ -48,8 +53,10 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -58,6 +65,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class CreateOrEditActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -67,10 +75,12 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
     private EstateViewModel estateViewModel;
     private Estate updateEstate;
+    private List<Picture> updatePicture;
     boolean isAllFieldsChecked = false;
     private PictureAdapter pictureAdapter;
     private List<Picture> pictureList = new ArrayList<>();
     private static final int RESULT_LOAD_IMG = 100 ;
+    private static final int RESULT_TAKE_IMG = 200 ;
 
     AutoCompleteTextView agent;
     AutoCompleteTextView type;
@@ -93,6 +103,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     private TextInputLayout soldLayout;
     private AppCompatButton addPicture;
     private RecyclerView recyclerViewPhotos;
+    private MaterialAlertDialogBuilder builder;
 
 
 
@@ -100,6 +111,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
+
 
         if (getIntent() != null) {
             isEdit = getIntent().getExtras().getBoolean(PARAM_EDIT);
@@ -144,15 +156,20 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
     private void configureViewModel() {
         estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(this)).get(EstateViewModel.class);
-        int estateId = getIntent().getIntExtra("estateEditId", 0);
-        if (estateId != 0)
+
+        String estateId = getIntent().getStringExtra("estateEditId");
+
+
             estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
                 @Override
                 public void onChanged(Estate estate) {
                     CreateOrEditActivity.this.updateEditEstate(estate);
+
                 }
             });
+
     }
+
 
 
 
@@ -162,11 +179,38 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
+                selectPicture();
+
             }
         });
+    }
+
+
+    protected void selectPicture(){
+        final CharSequence[] options = {"Take Picture", "Choose from Gallery", "Cancel"};
+
+        builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Add pictures");
+        builder.setItems(options, (dialog, item) -> {
+
+            if (options[item].equals("Take Picture")) {
+
+                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePicture, RESULT_TAKE_IMG);
+
+            } else if (options[item].equals("Choose from Gallery")) {
+
+                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
+            } else if (options[item].equals("Cancel")) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 
 
@@ -174,18 +218,48 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
 
+        if (reqCode == RESULT_TAKE_IMG && resultCode == RESULT_OK ){
+
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            File destination = new File(Environment.getExternalStorageDirectory(),
+                    System.currentTimeMillis() + ".jpg");
+            FileOutputStream fo;
+            try {
+                destination.createNewFile();
+                fo = new FileOutputStream(destination);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Picture mPicture = new Picture("",getImageUri(this,thumbnail).toString(),""); // estate id
+            Log.d("Picture", "Picture : " + mPicture);
+
+            pictureAdapter.addPicture(mPicture);// isEdit / edit if else ajouter en bdd pour chaque photo
 
 
-        if (resultCode == RESULT_OK && reqCode == RESULT_LOAD_IMG) {
-            final Uri imageUri = data.getData();
-            Picture mPicture = new Picture(1,imageUri.toString(),""); // estate id
-            pictureAdapter.addPicture(mPicture);
+                } else if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK){
+
+                    final Uri imageUri = data.getData();
+                    Picture mPicture = new Picture("",imageUri.toString(),""); // estate id
+                    pictureAdapter.addPicture(mPicture);
+
+                }
         }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
 
     private void configureRecyclerView() {
-        pictureAdapter = new PictureAdapter(pictureList);
+        pictureAdapter = new PictureAdapter(pictureList,false);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         recyclerViewPhotos.setLayoutManager(horizontalLayoutManager);
         recyclerViewPhotos.setAdapter(pictureAdapter);
@@ -317,6 +391,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         if (!isEdit) {
 
             Estate estate = new Estate(
+                    UUID.randomUUID().toString(),
                     type.getText().toString(),
                     Integer.parseInt(surface.getText().toString()),
                     Integer.parseInt(rooms.getText().toString()),
@@ -337,8 +412,30 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                     agent.getText().toString());
 
 
-
             estateViewModel.createEstate(estate);
+
+
+
+            pictureList = pictureAdapter.getPicturePath();
+            ArrayList<String> descriptionList = new ArrayList<>();
+
+
+            for (int i = 0; i < pictureList.size(); i++){
+                // ID
+                pictureList.get(i).setIdEstate(estate.getEstateID());
+                //DESCRIPTION PICTURE
+                EditText desc = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_description);
+                String descriptionImage = desc.getText().toString();
+                descriptionList.add(descriptionImage);
+                pictureList.get(i).setPictureDescription(descriptionList.get(i));
+                //CREATE PICTURE
+                estateViewModel.createPicture(pictureList.get(i));
+
+                Log.d("PictureGet", "picture : " + pictureList.get(i));
+            }
+
+
+
             Toast.makeText(this, getResources().getString(R.string.createEstate), Toast.LENGTH_SHORT).show();
         } else {
 
@@ -396,8 +493,8 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             String estateAgent = agent.getText().toString();
             updateEstate.setAgentName(estateAgent);
 
-
             estateViewModel.updateEstate(updateEstate);
+
             Toast.makeText(this, getResources().getString(R.string.updateEstate), Toast.LENGTH_SHORT).show();
         }
 
@@ -438,8 +535,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         }
 
     }
-
-
+    
     private boolean neededFields() {
 
         String soldDateInput = soldLayout.getEditText().getText().toString();

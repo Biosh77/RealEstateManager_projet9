@@ -32,7 +32,7 @@ public class EstateContentProviderTest {
     private ContentResolver mContentResolver;
 
     //Data Set for test
-    private static Integer estateID = 1;
+    private static String estateID = "1";
 
     @Before
     public void setUp() {
@@ -45,9 +45,7 @@ public class EstateContentProviderTest {
 
     @Test
     public void getEstateWhenNoEstateInserted() {
-        final Cursor cursor =
-                mContentResolver.query(ContentUris.withAppendedId(EstateProvider.URI_ESTATE, estateID),
-                        null, null, null, null);
+        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID), null, null, null, null);
         assertThat(cursor,notNullValue());
         assertThat(cursor.getCount(), is(0));
         cursor.close();
@@ -58,9 +56,7 @@ public class EstateContentProviderTest {
         //Before : Adding demo estate
         final Uri estateUri = mContentResolver.insert(EstateProvider.URI_ESTATE, generateEstate());
         //test
-        final Cursor cursor =
-                mContentResolver.query(ContentUris.withAppendedId(EstateProvider.URI_ESTATE, estateID),
-                        null, null, null, null);
+        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID), null, null, null, null);
         assertThat(cursor, notNullValue());
         assertThat(cursor.getCount(), is(1));
         assertThat(cursor.moveToFirst(), is(true));
@@ -71,6 +67,7 @@ public class EstateContentProviderTest {
     private ContentValues generateEstate() {
         final ContentValues values = new ContentValues();
 
+        values.put("id","1");
         values.put("estateType", "House");
         values.put("surface", 50);
         values.put("rooms", 3);

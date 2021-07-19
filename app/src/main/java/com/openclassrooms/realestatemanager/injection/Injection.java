@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.openclassrooms.realestatemanager.database.EstateDataBase;
 import com.openclassrooms.realestatemanager.repositories.EstateDataRepository;
+import com.openclassrooms.realestatemanager.repositories.FullEstateRepository;
 import com.openclassrooms.realestatemanager.repositories.PictureDataRepository;
 
 import java.util.concurrent.Executor;
@@ -21,6 +22,11 @@ public class Injection {
         return new PictureDataRepository(estateDataBase.pictureDAO());
     }
 
+    public static FullEstateRepository provideFullEstateDataSource(Context context){
+        EstateDataBase estateDataBase = EstateDataBase.getInstance(context);
+        return new FullEstateRepository(estateDataBase.fullEstateDAO());
+    }
+
     public static Executor provideExecutor() {
         return Executors.newSingleThreadExecutor();
     }
@@ -28,7 +34,8 @@ public class Injection {
     public static ViewModelFactory provideViewModelFactory(Context context) {
         EstateDataRepository dataSourceEstate = provideEstateDataSource(context);
         PictureDataRepository dataSourcePicture = providePictureDataSource(context);
+        FullEstateRepository dataSourceFullEstate = provideFullEstateDataSource(context);
         Executor executor = provideExecutor();
-        return new ViewModelFactory(dataSourceEstate,dataSourcePicture, executor);
+        return new ViewModelFactory(dataSourceEstate,dataSourcePicture,dataSourceFullEstate, executor);
     }
 }

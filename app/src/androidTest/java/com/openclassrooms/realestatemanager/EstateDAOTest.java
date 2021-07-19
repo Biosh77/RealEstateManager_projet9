@@ -31,10 +31,10 @@ public class EstateDAOTest {
     private static Integer estateID = 1;
 
 
-    private static Estate ESTATE_HOUSE = new Estate("house", 50, 3, 2, 1, 150000.00, "Beautiful house", "6 rue des roches", 77131, "Touquin", true, false,
+    private static Estate ESTATE_HOUSE = new Estate("1","house", 50, 3, 2, 1, 150000.00, "Beautiful house", "6 rue des roches", 77131, "Touquin", true, false,
             false, true, false, "24/06/21", "", "David Bowie");
 
-    private static Estate ESTATE_FLAT = new Estate("flat", 80, 2, 1, 1, 50000.00, "Very nice flat", "4 rue des roches", 77131, "Touquin", false, true,
+    private static Estate ESTATE_FLAT = new Estate("2","flat", 80, 2, 1, 1, 50000.00, "Very nice flat", "4 rue des roches", 77131, "Touquin", false, true,
             true, true, false, "22/06/21", "", "Mick Jagger");
 
 

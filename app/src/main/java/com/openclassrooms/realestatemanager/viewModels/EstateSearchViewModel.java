@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class SearchViewModel extends ViewModel {
+public class EstateSearchViewModel extends ViewModel {
 
 
     EstateDataRepository estateDataSource;
     Executor executor;
 
-    public SearchViewModel(EstateDataRepository estateDataSource, Executor executor) {
+    public EstateSearchViewModel(EstateDataRepository estateDataSource, Executor executor) {
         this.estateDataSource = estateDataSource;
         this.executor = executor;
     }

@@ -8,6 +8,9 @@ import java.io.Serializable
 
 @Entity
 data class Estate(
+        @PrimaryKey
+        var estateID: String = "" ,
+
         var estateType: String? = "",
         var surface: Int? = null,
         var rooms: Int?= null,
@@ -26,21 +29,15 @@ data class Estate(
         var entryDateEstate: String? = "",
         var soldDate: String? = "",
         var agentName: String = "",
-        //var hasPictures: Boolean = false,
 
-) : Serializable {
-    @PrimaryKey(autoGenerate = true)
-    var estateID: Int = 0
-
-
-}
+) : Serializable
 
 fun fromContentValues(values: ContentValues): Estate {
 
 
 
     val estate = Estate()
-
+    if (values.containsKey("id")) estate.estateID = values.getAsString("id")
     if (values.containsKey("estateType")) estate.estateType = values.getAsString("estateType")
     if (values.containsKey("surface")) estate.surface = values.getAsInteger("surface")
     if (values.containsKey("rooms")) estate.rooms = values.getAsInteger("rooms")

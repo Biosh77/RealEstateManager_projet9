@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.openclassrooms.realestatemanager.models.Estate
 import com.openclassrooms.realestatemanager.models.Picture
 
 
@@ -12,7 +13,11 @@ import com.openclassrooms.realestatemanager.models.Picture
 interface PictureDAO {
 
     @Query("SELECT * FROM Picture WHERE idEstate = :idEstate")
-    fun getPictures(idEstate:Int): LiveData<List<Picture>>
+    fun getPictures(idEstate: String): LiveData<List<Picture>>
+
+
+    @Query("SELECT * FROM Picture ")
+    fun getPicture(): LiveData<List<Picture>>
 
     @Insert
     fun insertPicture(picture: Picture)

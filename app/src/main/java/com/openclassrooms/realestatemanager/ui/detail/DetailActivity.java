@@ -85,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.edit_btn) {
-            int estate = getIntent().getIntExtra("estate",0);
+            String estate = getIntent().getStringExtra("estate");
             Intent editIntent = new Intent(this, CreateOrEditActivity.class);
             editIntent.putExtra(PARAM_EDIT, true);
             editIntent.putExtra("estateEditId", estate);

@@ -57,7 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final List<String> listAddress = new ArrayList<>();
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private List<Estate> estateList;
-    private final List<Integer> idList = new ArrayList<>();
+    private final List<String> idList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for (Estate estate : estateList) {
 
-            int id = estate.getEstateID();
+            String id = estate.getEstateID();
             String address = estate.getAddress();
             String postalCode = String.valueOf(estate.getPostalCode());
             String city = estate.getCity();
@@ -210,10 +210,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(@NonNull Marker marker) {
-                int estateId = Integer.parseInt(marker.getTag().toString());
+                String estateId = (marker.getTag().toString());
 
                 for (Estate estate : estateList) {
-                    if (estate.getEstateID() == estateId) {
+                    if (estate.getEstateID().equals(estateId)) {
                         Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                         intent.putExtra("estate", estate.getEstateID());
                         startActivity(intent);

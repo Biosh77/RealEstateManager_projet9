@@ -19,17 +19,17 @@ import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
 import com.openclassrooms.realestatemanager.models.SearchEstates;
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity;
-import com.openclassrooms.realestatemanager.viewModels.SearchViewModel;
+import com.openclassrooms.realestatemanager.viewModels.EstateSearchViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultFragment extends Fragment implements SearchAdapter.OnSearchEstateClickListener {
+public class SearchResultFragment extends Fragment implements EstateSearchAdapter.OnSearchEstateClickListener {
 
 
-    private SearchViewModel searchViewModel;
+    private EstateSearchViewModel estateSearchViewModel;
     private ArrayList<Estate> estateList;
-    private SearchAdapter adapter;
+    private EstateSearchAdapter adapter;
     private RecyclerView recyclerView;
 
 
@@ -55,7 +55,7 @@ public class SearchResultFragment extends Fragment implements SearchAdapter.OnSe
     private void configureRecyclerView() {
         this.estateList = new ArrayList<>();
         //Create adapter
-        this.adapter = new SearchAdapter(this.estateList, Glide.with(this), this);
+        this.adapter = new EstateSearchAdapter(this.estateList, Glide.with(this), this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -64,11 +64,11 @@ public class SearchResultFragment extends Fragment implements SearchAdapter.OnSe
 
     private void configureViewModel() {
 
-        searchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(SearchViewModel.class);
+        estateSearchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(EstateSearchViewModel.class);
 
         SearchEstates searchEstates = (SearchEstates) getActivity().getIntent().getSerializableExtra("SearchEstate");
 
-        searchViewModel.searchEstate(searchEstates.getEstateType(),
+        estateSearchViewModel.searchEstate(searchEstates.getEstateType(),
                 searchEstates.getCity(),
                 searchEstates.getMinRooms(),
                 searchEstates.getMaxRooms(),

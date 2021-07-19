@@ -31,7 +31,7 @@ public class EstateProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         if (getContext() != null) {
-            long estateID = ContentUris.parseId(uri);
+            String estateID = uri.toString();
             final Cursor cursor =
                     EstateDataBase.getInstance(getContext()).estateDAO().getEstateWithCursor(estateID);
             cursor.setNotificationUri(getContext().getContentResolver(), uri);

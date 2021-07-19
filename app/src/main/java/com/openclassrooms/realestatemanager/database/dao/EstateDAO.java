@@ -31,34 +31,18 @@ public interface EstateDAO {
     int updateEstate(Estate estate);
 
     @Query("SELECT * FROM Estate WHERE estateID = :estateID")
-    LiveData<Estate> getEstate(long estateID);
+    LiveData<Estate> getEstate(String estateID);
 
     @Query("DELETE FROM Estate WHERE estateID = :estateID")
     int deleteEstate(long estateID);
 
     //For ContentProvider
     @Query("SELECT * FROM Estate WHERE estateID = :estateID")
-    Cursor getEstateWithCursor(long estateID);
+    Cursor getEstateWithCursor(String estateID);
 
     //For Search
     @RawQuery(observedEntities = Estate.class)
     LiveData<List<Estate>> getSearchEstates(SupportSQLiteQuery query);
 
-
-    //requete sql avec param if or == etc
-
-
-
-
-
-
-   /*
-    getEstates ( liste estates )
-    getEstate ( pour id ? )
-    insertEstate ( pour créer l'estate et récupérer les données après )
-    deleteEstate ( pas utilise pour ce projet )
-    updateEstate ( pour edit )
-    getSearchEstate ( ??? on doit récupérer les données sur la BDD pour les recherches )
- */
 
 }

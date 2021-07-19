@@ -13,30 +13,22 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
-import com.openclassrooms.realestatemanager.injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.SearchEstates;
-import com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity;
-import com.openclassrooms.realestatemanager.utils.Utils;
-import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
-import com.openclassrooms.realestatemanager.viewModels.SearchViewModel;
+import com.openclassrooms.realestatemanager.viewModels.EstateSearchViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-import static com.openclassrooms.realestatemanager.ui.createOrEditEstate.CreateOrEditActivity.PARAM_EDIT;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -58,7 +50,7 @@ public class SearchActivity extends AppCompatActivity {
     private MaterialCheckBox boxParks;
     private MaterialCheckBox isSold;
     private SearchEstates searchEstates;
-    SearchViewModel searchViewModel;
+    EstateSearchViewModel estateSearchViewModel;
 
 
     @Override
@@ -94,7 +86,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void configureViewModel() {
-       searchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getApplicationContext())).get(SearchViewModel.class);
+       estateSearchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getApplicationContext())).get(EstateSearchViewModel.class);
     }
 
 

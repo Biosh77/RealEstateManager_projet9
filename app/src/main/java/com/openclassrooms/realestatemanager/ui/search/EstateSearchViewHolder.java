@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui.list;
+package com.openclassrooms.realestatemanager.ui.search;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,16 +7,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class ListViewHolder extends RecyclerView.ViewHolder {
+public class EstateSearchViewHolder extends RecyclerView.ViewHolder {
 
 
     private ImageView itemImage;
@@ -26,7 +24,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     private ImageView itemSold;
 
 
-    public ListViewHolder(@NonNull View itemView) {
+    public EstateSearchViewHolder(@NonNull View itemView) {
         super(itemView);
 
         itemImage = itemView.findViewById(R.id.item_picture);
@@ -37,9 +35,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-
     public void updateWithData(Estate estate, RequestManager glide) {
-
 
 
         // For  type
@@ -47,17 +43,16 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         //For city
         itemCity.setText(estate.getCity());
         //Price
-        String price = "$"+NumberFormat.getInstance(Locale.US).format(estate.getPrice());
+        String price = "$" + NumberFormat.getInstance(Locale.US).format(estate.getPrice());
         itemPrice.setText(price);
         //Sold or not
-        if (estate.getSold()){
+        if (estate.getSold()) {
             itemSold.setImageResource(R.drawable.sold);
         }
-        //Photo
-        //if (!estate.xxxx.isEmpty()){
-            //glide.load(xxxxx).apply(RequestOptions.centerCropTransform()).into(itemImage);
-        //}else {
-            glide.load(R.drawable.no_photo).apply(RequestOptions.centerCropTransform()).into(itemImage);
-        //}
+        //Photo glide
+
+
     }
+
+
 }

@@ -4,7 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
+import com.openclassrooms.realestatemanager.models.Picture;
 import com.openclassrooms.realestatemanager.repositories.EstateDataRepository;
+import com.openclassrooms.realestatemanager.repositories.FullEstateRepository;
+import com.openclassrooms.realestatemanager.repositories.PictureDataRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -13,11 +17,15 @@ public class EstateViewModel extends ViewModel {
 
     //Repository
     private final EstateDataRepository estateDataSource;
+    PictureDataRepository pictureDataSource;
+    private final FullEstateRepository fullEstateDataSource;
     private final Executor executor;
 
 
-    public EstateViewModel(EstateDataRepository estateDataSource, Executor executor) {
+    public EstateViewModel(EstateDataRepository estateDataSource,PictureDataRepository pictureDataSource, FullEstateRepository fullEstateRepository, Executor executor) {
+        this.pictureDataSource = pictureDataSource;
         this.estateDataSource = estateDataSource;
+        this.fullEstateDataSource = fullEstateRepository;
         this.executor = executor;
     }
 
@@ -27,7 +35,7 @@ public class EstateViewModel extends ViewModel {
     }
 
 
-    public LiveData<Estate> getEstate(long estateID) {
+    public LiveData<Estate> getEstate(String estateID) {
         return estateDataSource.getEstate(estateID);
     }
 
@@ -47,6 +55,38 @@ public class EstateViewModel extends ViewModel {
 
     public int deleteEstate(long estateID) {
         return estateDataSource.deleteEstate(estateID);
+    }
+
+
+
+    public LiveData<List<Picture>> getPictures(String idEstate) {
+        return pictureDataSource.getPictures(idEstate);
+    }
+
+    public LiveData<List<Picture>> getPicture() {
+        return pictureDataSource.getPicture();
+    }
+
+    public void createPicture(final Picture picture) {
+        executor.execute(() -> {
+            pictureDataSource.createPicture(picture);
+        });
+    }
+
+
+    public void updatePicture(Picture picture) {
+        executor.execute(() -> {
+            pictureDataSource.updatePicture(picture);
+        });
+    }
+
+
+    public int deletePicture(int pictureId) {
+        return pictureDataSource.deletePicture(pictureId);
+    }
+
+    public LiveData<List<FullEstate>> getFullEstate() {
+        return fullEstateDataSource.getFullEstates();
     }
 
 

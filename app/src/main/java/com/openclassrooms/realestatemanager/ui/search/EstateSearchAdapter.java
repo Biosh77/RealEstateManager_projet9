@@ -11,21 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
-import com.openclassrooms.realestatemanager.ui.list.ListAdapter;
 
 import java.util.List;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
+public class EstateSearchAdapter extends RecyclerView.Adapter<EstateSearchViewHolder> {
 
     private List<Estate> estates;
     private RequestManager glide;
-    SearchAdapter.OnSearchEstateClickListener listener;
+    EstateSearchAdapter.OnSearchEstateClickListener listener;
 
     interface OnSearchEstateClickListener{
         void OnSearchEstateClick(Estate estate);
     }
 
-    public SearchAdapter(List<Estate> estates,RequestManager glide,OnSearchEstateClickListener listener) {
+    public EstateSearchAdapter(List<Estate> estates, RequestManager glide, OnSearchEstateClickListener listener) {
         this.estates = estates;
         this.glide = glide;
         this.listener = listener;
@@ -33,16 +32,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     @NonNull
     @Override
-    public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EstateSearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.fragment_list_item, parent, false);
 
-        return new SearchViewHolder(view);
+        return new EstateSearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EstateSearchViewHolder holder, int position) {
         holder.updateWithData(estates.get(position),glide);
         holder.itemView.setOnClickListener(v -> {
             Estate estate = estates.get(position);

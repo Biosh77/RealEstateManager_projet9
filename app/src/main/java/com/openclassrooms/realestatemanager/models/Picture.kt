@@ -15,7 +15,8 @@ onDelete = CASCADE)])
 
 data class Picture (
 
-        var idEstate : Int,
+
+        var idEstate :String,
         var picturePath : String,
         var pictureDescription : String,
 

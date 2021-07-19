@@ -25,7 +25,7 @@ public class EstateDataRepository {
 
     //--- GET ID ---
 
-    public LiveData<Estate> getEstate(long estateID) {
+    public LiveData<Estate> getEstate(String estateID) {
         return this.estateDAO.getEstate(estateID);
     }
 
