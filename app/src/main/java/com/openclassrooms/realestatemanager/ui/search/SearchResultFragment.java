@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,9 +18,11 @@ import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 import com.openclassrooms.realestatemanager.models.SearchEstates;
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity;
 import com.openclassrooms.realestatemanager.viewModels.EstateSearchViewModel;
+import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,8 @@ public class SearchResultFragment extends Fragment implements EstateSearchAdapte
 
 
     private EstateSearchViewModel estateSearchViewModel;
-    private ArrayList<Estate> estateList;
+    private EstateViewModel estateViewModel;
+    private ArrayList<FullEstate> estateList;
     private EstateSearchAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -63,7 +67,7 @@ public class SearchResultFragment extends Fragment implements EstateSearchAdapte
     }
 
     private void configureViewModel() {
-
+        estateViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(EstateViewModel.class);
         estateSearchViewModel = new ViewModelProvider(this, Injection.provideViewModelFactory(getContext())).get(EstateSearchViewModel.class);
 
         SearchEstates searchEstates = (SearchEstates) getActivity().getIntent().getSerializableExtra("SearchEstate");
@@ -83,21 +87,23 @@ public class SearchResultFragment extends Fragment implements EstateSearchAdapte
                 searchEstates.getStores(),
                 searchEstates.getPark(),
                 searchEstates.getRestaurants(),
-                searchEstates.getSold()).observe(getViewLifecycleOwner(),this::updateEstatesList);
+                searchEstates.getSold()).observe(getViewLifecycleOwner(), new Observer<List<FullEstate>>() {
+            @Override
+            public void onChanged(List<FullEstate> estates) {
+                SearchResultFragment.this.updateEstatesList(estates);
+            }
+        });
     }
 
-    private void updateEstatesList(List<Estate> estates) {
-        estateList.clear();
-        estateList.addAll(estates);
-        adapter.notifyDataSetChanged();
+
+    private void updateEstatesList(List<FullEstate> estates) {
+        adapter.setEstateList(estates);
     }
 
     @Override
-    public void OnSearchEstateClick(Estate estate) {
-
-
+    public void OnSearchEstateClick(FullEstate estate) {
         Intent intent = new Intent(getContext(), DetailActivity.class);
-        intent.putExtra("estate",estate.getEstateID());
+        intent.putExtra("estate",estate.estate.getEstateID());
         startActivity(intent);
 
     }

@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -35,21 +37,26 @@ public class EstateSearchViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void updateWithData(Estate estate, RequestManager glide) {
+    public void updateWithData(FullEstate fullEstate, RequestManager glide) {
 
 
         // For  type
-        itemType.setText(estate.getEstateType());
+        itemType.setText(fullEstate.estate.getEstateType());
         //For city
-        itemCity.setText(estate.getCity());
+        itemCity.setText(fullEstate.estate.getCity());
         //Price
-        String price = "$" + NumberFormat.getInstance(Locale.US).format(estate.getPrice());
+        String price = "$" + NumberFormat.getInstance(Locale.US).format(fullEstate.estate.getPrice());
         itemPrice.setText(price);
         //Sold or not
-        if (estate.getSold()) {
+        if (fullEstate.estate.getSold()) {
             itemSold.setImageResource(R.drawable.sold);
         }
-        //Photo glide
+        //Photo
+        if (!fullEstate.estate.getEstateID().isEmpty()) {
+            glide.load(fullEstate.myListPictures.get(0).getPicturePath()).apply(RequestOptions.centerCropTransform()).into(itemImage);
+        } else {
+            glide.load(R.drawable.no_photo).apply(RequestOptions.centerCropTransform()).into(itemImage);
+        }
 
 
     }

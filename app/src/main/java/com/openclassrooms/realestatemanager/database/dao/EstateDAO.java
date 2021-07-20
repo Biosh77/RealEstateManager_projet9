@@ -14,6 +14,7 @@ import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public interface EstateDAO {
 
     //For Search
     @RawQuery(observedEntities = Estate.class)
-    LiveData<List<Estate>> getSearchEstates(SupportSQLiteQuery query);
+    LiveData<List<FullEstate>> getSearchEstates(SupportSQLiteQuery query);
 
 
 }

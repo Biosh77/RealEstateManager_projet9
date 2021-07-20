@@ -30,9 +30,7 @@ class ListFragment : Fragment(), EstateListAdapter.OnEstateClickListener {
     private var detailFragment: DetailFragment? = null
     private lateinit var adapterEstate: EstateListAdapter
     private val pictureList = arrayListOf<Picture>()
-    private var estatePictureId: String? = null
-    private var estateId: String? =null
-    private var estate: Estate? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_list, container, false)
@@ -74,7 +72,7 @@ class ListFragment : Fragment(), EstateListAdapter.OnEstateClickListener {
             fragmentTransaction.commit()
 
             detailFragment?.updateUi(estate.estate)
-            detailFragment?.updatePictures(estate.myListPictures)//fullEstate
+            detailFragment?.updatePictures(estate.myListPictures)
 
 
         } else {

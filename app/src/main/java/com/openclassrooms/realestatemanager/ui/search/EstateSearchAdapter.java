@@ -11,20 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 
 import java.util.List;
 
 public class EstateSearchAdapter extends RecyclerView.Adapter<EstateSearchViewHolder> {
 
-    private List<Estate> estates;
+    private List<FullEstate> estates;
     private RequestManager glide;
     EstateSearchAdapter.OnSearchEstateClickListener listener;
 
     interface OnSearchEstateClickListener{
-        void OnSearchEstateClick(Estate estate);
+        void OnSearchEstateClick(FullEstate estate);
     }
 
-    public EstateSearchAdapter(List<Estate> estates, RequestManager glide, OnSearchEstateClickListener listener) {
+    public EstateSearchAdapter(List<FullEstate> estates, RequestManager glide, OnSearchEstateClickListener listener) {
         this.estates = estates;
         this.glide = glide;
         this.listener = listener;
@@ -44,7 +45,7 @@ public class EstateSearchAdapter extends RecyclerView.Adapter<EstateSearchViewHo
     public void onBindViewHolder(@NonNull EstateSearchViewHolder holder, int position) {
         holder.updateWithData(estates.get(position),glide);
         holder.itemView.setOnClickListener(v -> {
-            Estate estate = estates.get(position);
+            FullEstate estate = estates.get(position);
             listener.OnSearchEstateClick(estate);
         });
     }
@@ -52,5 +53,10 @@ public class EstateSearchAdapter extends RecyclerView.Adapter<EstateSearchViewHo
     @Override
     public int getItemCount() {
         return estates.size();
+    }
+
+    public void setEstateList(List<FullEstate> estateList) {
+        this.estates = estateList;
+        notifyDataSetChanged();
     }
 }

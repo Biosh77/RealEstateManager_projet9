@@ -159,6 +159,13 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
         String estateId = getIntent().getStringExtra("estateEditId");
 
+        estateViewModel.getPictures(estateId).observe(this, new Observer<List<Picture>>() {
+            @Override
+            public void onChanged(List<Picture> pictures) {
+                CreateOrEditActivity.this.updateEditPictures(pictures);
+
+            }
+        });
 
             estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
                 @Override
@@ -235,16 +242,19 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                 e.printStackTrace();
             }
 
-            Picture mPicture = new Picture("",getImageUri(this,thumbnail).toString(),""); // estate id
-            Log.d("Picture", "Picture : " + mPicture);
+            Picture mPicture = new Picture("",getImageUri(this,thumbnail).toString(),"");
 
-            pictureAdapter.addPicture(mPicture);// isEdit / edit if else ajouter en bdd pour chaque photo
+           
+
+                pictureAdapter.addPicture(mPicture);
+
+
 
 
                 } else if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK){
 
                     final Uri imageUri = data.getData();
-                    Picture mPicture = new Picture("",imageUri.toString(),""); // estate id
+                    Picture mPicture = new Picture("",imageUri.toString(),"");
                     pictureAdapter.addPicture(mPicture);
 
                 }
@@ -387,9 +397,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     // Save or Update in dataBase
     private void saveEstate() {
 
-
         if (!isEdit) {
-
             Estate estate = new Estate(
                     UUID.randomUUID().toString(),
                     type.getText().toString(),
@@ -411,10 +419,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                     soldDate.getText().toString(),
                     agent.getText().toString());
 
-
             estateViewModel.createEstate(estate);
-
-
 
             pictureList = pictureAdapter.getPicturePath();
             ArrayList<String> descriptionList = new ArrayList<>();
@@ -495,6 +500,14 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
             estateViewModel.updateEstate(updateEstate);
 
+
+            for (int i = 0; i < updatePicture.size(); i++) {
+
+
+
+                estateViewModel.updatePicture(updatePicture.get(i));
+            }
+
             Toast.makeText(this, getResources().getString(R.string.updateEstate), Toast.LENGTH_SHORT).show();
         }
 
@@ -535,7 +548,43 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         }
 
     }
-    
+
+    private void updateEditPictures(List<Picture> pictures) {
+
+        updatePicture = pictures;
+
+
+        /*
+        if (isEdit) {
+
+                //IMAGE PICTURE UPDATE
+                ImageView image = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_image);
+                image.setImageURI(Uri.parse(pictures.get(i).getPicturePath()));
+                // DESCRIPTION
+                EditText desc = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_description);
+                desc.setText(pictures.get(i).getPictureDescription());
+                //BUTTON
+                Button button = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_delete);
+                button.setVisibility(View.VISIBLE);
+
+                int finalI = i;
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        estateViewModel.deletePicture(updatePicture.get(finalI).getPictureId());
+                    }
+                });
+
+         */
+
+
+
+
+
+
+    }
+
+
     private boolean neededFields() {
 
         String soldDateInput = soldLayout.getEditText().getText().toString();

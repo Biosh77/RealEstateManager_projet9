@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.openclassrooms.realestatemanager.database.dao.EstateDAO;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class EstateDataRepository {
 
     // --- SEARCH ---
 
-    public LiveData<List<Estate>> getSearchEstates(String queryString, List<Object> args){
+    public LiveData<List<FullEstate>> getSearchEstates(String queryString, List<Object> args){
         SupportSQLiteQuery query = new SimpleSQLiteQuery(queryString,args.toArray());
         return estateDAO.getSearchEstates(query);
     }

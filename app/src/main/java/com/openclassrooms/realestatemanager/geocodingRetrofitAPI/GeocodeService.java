@@ -15,9 +15,9 @@ import retrofit2.http.Query;
 public interface GeocodeService {
 
 
-    String GOOGLE_MAP_API_KEY = BuildConfig.MAP_KEY;
+    String GEOCODE_KEY = BuildConfig.GEOCODE_KEY;
 
-    @GET("maps/api/geocode/json?key=AIzaSyBcOk5THpnDnY_8ymJHerkseb-7ZBDR4NM")
+    @GET("maps/api/geocode/json?key="+GEOCODE_KEY)
     Observable<Geocoding> getGeocode(@Query("address") String address);
 
 

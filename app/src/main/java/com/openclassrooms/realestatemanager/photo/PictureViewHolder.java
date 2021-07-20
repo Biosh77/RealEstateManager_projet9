@@ -54,7 +54,7 @@ public class PictureViewHolder extends RecyclerView.ViewHolder {
         imageDescription.setText(pictureDescription);
         imageDescription.setTextColor(Color.WHITE);
         //DELETE and IMAGE DESC
-        if (!isEdit){
+        if (isEdit){
             imageDelete.setVisibility(View.GONE);
             imageDescription.setEnabled(false);
         }else {

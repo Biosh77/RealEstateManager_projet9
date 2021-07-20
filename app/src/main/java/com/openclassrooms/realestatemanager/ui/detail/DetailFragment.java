@@ -117,10 +117,12 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void configureRecyclerView(List<Picture> pictures) {
-        pictureAdapter = new PictureAdapter(pictures, false);
+        pictureAdapter = new PictureAdapter(pictures, true);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         recyclerView.setAdapter(pictureAdapter);
+
+
 
 
     }
@@ -143,8 +145,12 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
         this.estateViewModel.getEstate(estateId).observe(getActivity(),
                 (Estate estate) -> {
+
                     DetailFragment.this.updateUi(estate);
+
                     getAddress(estate);
+
+
                 });
     }
 
@@ -162,6 +168,8 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void updatePictures(List<Picture> pictures) {
+
+
         configureRecyclerView(pictures);
     }
 

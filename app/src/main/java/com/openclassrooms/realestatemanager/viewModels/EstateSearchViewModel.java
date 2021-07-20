@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.openclassrooms.realestatemanager.models.Estate;
+import com.openclassrooms.realestatemanager.models.FullEstate;
 import com.openclassrooms.realestatemanager.models.SearchEstates;
 import com.openclassrooms.realestatemanager.repositories.EstateDataRepository;
 
@@ -27,7 +28,7 @@ public class EstateSearchViewModel extends ViewModel {
         this.executor = executor;
     }
 
-    public LiveData<List<Estate>> searchEstate(
+    public LiveData<List<FullEstate>> searchEstate(
 
             String estateType,
             String city,

@@ -56,7 +56,6 @@ public class EstateListViewHolder extends RecyclerView.ViewHolder {
         if (fullEstate.estate.getSold()) {
             itemSold.setImageResource(R.drawable.sold);
         }
-
         //Photo
         if (!fullEstate.estate.getEstateID().isEmpty()) {
            glide.load(fullEstate.myListPictures.get(0).getPicturePath()).apply(RequestOptions.centerCropTransform()).into(itemImage);
