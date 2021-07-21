@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -57,6 +58,9 @@ public class EstateContentProviderTest {
         final Uri estateUri = mContentResolver.insert(EstateProvider.URI_ESTATE, generateEstate());
         //test
         final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID), null, null, null, null);
+
+        Log.d("UriTest", " uri : " + Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID));
+
         assertThat(cursor, notNullValue());
         assertThat(cursor.getCount(), is(1));
         assertThat(cursor.moveToFirst(), is(true));

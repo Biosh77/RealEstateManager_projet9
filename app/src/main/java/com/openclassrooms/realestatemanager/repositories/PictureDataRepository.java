@@ -40,8 +40,8 @@ public class PictureDataRepository {
 
     // --- DELETE ---
 
-    public int deletePicture(int pictureId) {
-        return this.pictureDAO.deletePicture(pictureId);
+    public void deletePicture(int pictureId) {
+         this.pictureDAO.deletePicture(pictureId);
     }
 
 }

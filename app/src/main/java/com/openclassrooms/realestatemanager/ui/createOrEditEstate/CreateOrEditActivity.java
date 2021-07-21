@@ -46,6 +46,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
+import com.openclassrooms.realestatemanager.contentProvider.EstateProvider;
 import com.openclassrooms.realestatemanager.models.Picture;
 import com.openclassrooms.realestatemanager.photo.PictureAdapter;
 import com.openclassrooms.realestatemanager.viewModels.EstateViewModel;
@@ -67,7 +68,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-public class CreateOrEditActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateOrEditActivity extends AppCompatActivity implements View.OnClickListener, PictureAdapter.Listener {
 
 
     private boolean isEdit;
@@ -75,12 +76,12 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
     private EstateViewModel estateViewModel;
     private Estate updateEstate;
-    private List<Picture> updatePicture;
     boolean isAllFieldsChecked = false;
     private PictureAdapter pictureAdapter;
+    private Picture picture;
     private List<Picture> pictureList = new ArrayList<>();
-    private static final int RESULT_LOAD_IMG = 100 ;
-    private static final int RESULT_TAKE_IMG = 200 ;
+    private static final int RESULT_LOAD_IMG = 100;
+    private static final int RESULT_TAKE_IMG = 200;
 
     AutoCompleteTextView agent;
     AutoCompleteTextView type;
@@ -104,7 +105,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     private AppCompatButton addPicture;
     private RecyclerView recyclerViewPhotos;
     private MaterialAlertDialogBuilder builder;
-
 
 
     @Override
@@ -167,34 +167,36 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-            estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
-                @Override
-                public void onChanged(Estate estate) {
-                    CreateOrEditActivity.this.updateEditEstate(estate);
+        estateViewModel.getEstate(estateId).observe(this, new Observer<Estate>() {
+            @Override
+            public void onChanged(Estate estate) {
+                CreateOrEditActivity.this.updateEditEstate(estate);
 
-                }
-            });
+            }
+        });
 
     }
 
+    @Override
+    public void onClickDeletePicture(int position) {
+        deletePicture(pictureAdapter.getPicture(position));
+    }
 
-
+    private void deletePicture(Picture picture) {
+        estateViewModel.deletePicture(picture.getPictureId());
+    }
 
     private void onClickAddPicture() {
         addPicture.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
-
                 selectPicture();
-
             }
         });
     }
 
 
-    protected void selectPicture(){
+    protected void selectPicture() {
         final CharSequence[] options = {"Take Picture", "Choose from Gallery", "Cancel"};
 
         builder = new MaterialAlertDialogBuilder(this);
@@ -225,7 +227,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
 
-        if (reqCode == RESULT_TAKE_IMG && resultCode == RESULT_OK ){
+        if (reqCode == RESULT_TAKE_IMG && resultCode == RESULT_OK) {
 
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -242,23 +244,22 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                 e.printStackTrace();
             }
 
-            Picture mPicture = new Picture("",getImageUri(this,thumbnail).toString(),"");
+            Picture mPicture = new Picture("", getImageUri(this, thumbnail).toString(), "");
 
-           
+            //tu as juste à ajouter la picture en bdd au moment où tu l'ajoute dans l'adapter (en edit seulement)
+
 
                 pictureAdapter.addPicture(mPicture);
 
 
+        } else if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK) {
 
+            final Uri imageUri = data.getData();
+            Picture mPicture = new Picture("", imageUri.toString(), "");
+            pictureAdapter.addPicture(mPicture);
 
-                } else if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK){
-
-                    final Uri imageUri = data.getData();
-                    Picture mPicture = new Picture("",imageUri.toString(),"");
-                    pictureAdapter.addPicture(mPicture);
-
-                }
         }
+    }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -269,10 +270,12 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
 
     private void configureRecyclerView() {
-        pictureAdapter = new PictureAdapter(pictureList,false);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+
+        pictureAdapter = new PictureAdapter(pictureList, isEdit, this);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPhotos.setLayoutManager(horizontalLayoutManager);
         recyclerViewPhotos.setAdapter(pictureAdapter);
+
     }
 
 
@@ -335,8 +338,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
 
     }
-
-
 
 
     /**
@@ -424,8 +425,9 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             pictureList = pictureAdapter.getPicturePath();
             ArrayList<String> descriptionList = new ArrayList<>();
 
+            Log.d("mPicture", "picture : " + pictureList);
 
-            for (int i = 0; i < pictureList.size(); i++){
+            for (int i = 0; i < pictureList.size(); i++) {
                 // ID
                 pictureList.get(i).setIdEstate(estate.getEstateID());
                 //DESCRIPTION PICTURE
@@ -436,9 +438,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
                 //CREATE PICTURE
                 estateViewModel.createPicture(pictureList.get(i));
 
-                Log.d("PictureGet", "picture : " + pictureList.get(i));
             }
-
 
 
             Toast.makeText(this, getResources().getString(R.string.createEstate), Toast.LENGTH_SHORT).show();
@@ -501,13 +501,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             estateViewModel.updateEstate(updateEstate);
 
 
-            for (int i = 0; i < updatePicture.size(); i++) {
-
-
-
-                estateViewModel.updatePicture(updatePicture.get(i));
-            }
-
             Toast.makeText(this, getResources().getString(R.string.updateEstate), Toast.LENGTH_SHORT).show();
         }
 
@@ -551,36 +544,9 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
     private void updateEditPictures(List<Picture> pictures) {
 
-        updatePicture = pictures;
-
-
-        /*
         if (isEdit) {
-
-                //IMAGE PICTURE UPDATE
-                ImageView image = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_image);
-                image.setImageURI(Uri.parse(pictures.get(i).getPicturePath()));
-                // DESCRIPTION
-                EditText desc = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_description);
-                desc.setText(pictures.get(i).getPictureDescription());
-                //BUTTON
-                Button button = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_delete);
-                button.setVisibility(View.VISIBLE);
-
-                int finalI = i;
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        estateViewModel.deletePicture(updatePicture.get(finalI).getPictureId());
-                    }
-                });
-
-         */
-
-
-
-
-
+            pictureAdapter.addPictures(pictures);
+        }
 
     }
 
@@ -595,9 +561,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         }
 
 
-
-
-       if (type.length() == 0 && description.length() == 0 && surface.length() == 0 && rooms.length() == 0 && bathrooms.length() == 0 && bedrooms.length() == 0 && address.length() == 0 && postalCode.length() == 0 && city.length() == 0 && price.length() == 0 && agent.length() == 0) {
+        if (type.length() == 0 && description.length() == 0 && surface.length() == 0 && rooms.length() == 0 && bathrooms.length() == 0 && bedrooms.length() == 0 && address.length() == 0 && postalCode.length() == 0 && city.length() == 0 && price.length() == 0 && agent.length() == 0) {
 
 
             type.setError("This field is required");
@@ -677,5 +641,4 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
         }
         return true;
     }
-
 }

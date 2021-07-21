@@ -81,8 +81,11 @@ public class EstateViewModel extends ViewModel {
     }
 
 
-    public int deletePicture(int pictureId) {
-        return pictureDataSource.deletePicture(pictureId);
+    public void deletePicture(int pictureId) {
+        executor.execute(() -> {
+            pictureDataSource.deletePicture(pictureId);
+        });
+
     }
 
     public LiveData<List<FullEstate>> getFullEstate() {

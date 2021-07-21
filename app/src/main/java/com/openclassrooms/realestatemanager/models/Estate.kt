@@ -34,8 +34,6 @@ data class Estate(
 
 fun fromContentValues(values: ContentValues): Estate {
 
-
-
     val estate = Estate()
     if (values.containsKey("id")) estate.estateID = values.getAsString("id")
     if (values.containsKey("estateType")) estate.estateType = values.getAsString("estateType")

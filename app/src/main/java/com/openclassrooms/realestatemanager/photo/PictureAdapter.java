@@ -20,17 +20,21 @@ import java.util.List;
 public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
 
+    //CALLBACK
+    public interface Listener{
+        void onClickDeletePicture(int position);
+    }
 
+    private final Listener callback;
     private List<Picture> picturePath;
     private boolean isEdit;
 
-    public List<Picture> getPicturePath() {
-        return picturePath;
-    }
 
-    public PictureAdapter(List<Picture> picturePath, Boolean isEdit) {
+
+    public PictureAdapter(List<Picture> picturePath, Boolean isEdit,Listener callback) {
         this.picturePath = picturePath;
         this.isEdit = isEdit;
+        this.callback = callback;
     }
 
     @NonNull
@@ -44,14 +48,30 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PictureViewHolder holder, int position) {
-        holder.updatePhoto(picturePath.get(position).getPicturePath(),picturePath.get(position).getPictureDescription(),isEdit);
+        holder.updatePhoto(picturePath.get(position).getPicturePath(),picturePath.get(position).getPictureDescription(),isEdit,callback);
     }
 
+
+    public List<Picture> getPicturePath() {
+        return picturePath;
+    }
+
+
+    public Picture getPicture(int position){
+        return picturePath.get(position);
+    }
+
+    //Add picture in picturePath
     public void addPicture(Picture picture){
        picturePath.add(picture);
        notifyDataSetChanged();
     }
 
+    public void addPictures(List<Picture> pictures){
+        picturePath.clear();
+        picturePath.addAll(pictures);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {

@@ -24,9 +24,11 @@
             android:layout_height="wrap_content"
             android:text="delete"
             android:alpha="0.70"
+            android:layout_marginBottom="@dimen/item_margin"
             android:textColor="@android:color/white"
             android:layout_gravity="center"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            />
 
         <EditText
             android:id="@+id/photo_description"

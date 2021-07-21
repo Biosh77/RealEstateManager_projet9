@@ -20,13 +20,14 @@ import com.openclassrooms.realestatemanager.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
-public class PictureViewHolder extends RecyclerView.ViewHolder {
+public class PictureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private ImageView imagePhoto;
     private Button imageDelete;
     private TextView imageDescription;
-
+    private WeakReference<PictureAdapter.Listener> callbackWeakRef;
 
 
     public PictureViewHolder(@NonNull View itemView) {
@@ -38,8 +39,11 @@ public class PictureViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void updatePhoto(String picturePath, String pictureDescription, Boolean isEdit){
+    public void updatePhoto(String picturePath, String pictureDescription, Boolean isEdit, PictureAdapter.Listener callback){
         RequestManager glide = Glide.with(itemView);
+        this.callbackWeakRef = new WeakReference<PictureAdapter.Listener>(callback);
+        this.imageDelete.setOnClickListener(this);
+
         //PICTURE
         final InputStream imageStream;
         try {
@@ -55,14 +59,18 @@ public class PictureViewHolder extends RecyclerView.ViewHolder {
         imageDescription.setTextColor(Color.WHITE);
         //DELETE and IMAGE DESC
         if (isEdit){
-            imageDelete.setVisibility(View.GONE);
-            imageDescription.setEnabled(false);
-        }else {
             imageDelete.setVisibility(View.VISIBLE);
             imageDescription.setEnabled(true);
+        }else {
+            imageDelete.setVisibility(View.GONE);
         }
 
     }
 
 
+    @Override
+    public void onClick(View v) {
+        PictureAdapter.Listener callback = callbackWeakRef.get();
+        if (callback !=null) callback.onClickDeletePicture(getAdapterPosition());
+    }
 }

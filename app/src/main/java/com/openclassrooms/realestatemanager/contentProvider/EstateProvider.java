@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,11 +32,11 @@ public class EstateProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         if (getContext() != null) {
-            String estateID = uri.toString();
+           String estateID = uri.getEncodedPath();
             final Cursor cursor =
                     EstateDataBase.getInstance(getContext()).estateDAO().getEstateWithCursor(estateID);
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
+            Log.d("UriTest2", " uri : " + estateID);
             return cursor;
         }
         throw new IllegalArgumentException("Failed to query row from uri" + uri);

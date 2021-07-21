@@ -103,6 +103,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         recyclerView = rootView.findViewById(R.id.recyclerView_photo);
 
 
+
         // MAP
         GoogleMapOptions options = new GoogleMapOptions();
         options.liteMode(true);
@@ -117,14 +118,10 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void configureRecyclerView(List<Picture> pictures) {
-        pictureAdapter = new PictureAdapter(pictures, true);
+        pictureAdapter = new PictureAdapter(pictures, false,null);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         recyclerView.setAdapter(pictureAdapter);
-
-
-
-
     }
 
 
@@ -168,8 +165,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void updatePictures(List<Picture> pictures) {
-
-
         configureRecyclerView(pictures);
     }
 
