@@ -23,6 +23,7 @@ public class EstateProvider extends ContentProvider {
     public static final Uri URI_ESTATE = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
 
 
+
     @Override
     public boolean onCreate() {
         return true;
@@ -32,11 +33,11 @@ public class EstateProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         if (getContext() != null) {
-           String estateID = uri.getEncodedPath();
+           String estateID = uri.getLastPathSegment();
             final Cursor cursor =
                     EstateDataBase.getInstance(getContext()).estateDAO().getEstateWithCursor(estateID);
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
-            Log.d("UriTest2", " uri : " + estateID);
+            Log.d("UriTest2", " uri estateI: " + estateID);
             return cursor;
         }
         throw new IllegalArgumentException("Failed to query row from uri" + uri);

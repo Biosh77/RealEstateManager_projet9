@@ -81,6 +81,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private RecyclerView recyclerView;
 
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -135,7 +136,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onChanged(List<Picture> pictures) {
                 pictureList = pictures;
-
                 updatePictures(pictures);
             }
         });

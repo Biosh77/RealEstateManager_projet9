@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.Picture;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -49,6 +50,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PictureViewHolder holder, int position) {
         holder.updatePhoto(picturePath.get(position).getPicturePath(),picturePath.get(position).getPictureDescription(),isEdit,callback);
+
+
     }
 
 
@@ -61,6 +64,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         return picturePath.get(position);
     }
 
+
     //Add picture in picturePath
     public void addPicture(Picture picture){
        picturePath.add(picture);
@@ -72,6 +76,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         picturePath.addAll(pictures);
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public int getItemCount() {

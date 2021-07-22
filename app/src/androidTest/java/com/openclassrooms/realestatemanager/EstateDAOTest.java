@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager;
 
+import android.util.Log;
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import androidx.room.Room;
@@ -28,7 +30,7 @@ public class EstateDAOTest {
     //For Data
     private EstateDataBase estateDatabase;
     //DATA SET for test
-    private static Integer estateID = 1;
+    private static String estateID = "1";
 
 
     private static Estate ESTATE_HOUSE = new Estate("1","house", 50, 3, 2, 1, 150000.00, "Beautiful house", "6 rue des roches", 77131, "Touquin", true, false,
@@ -70,12 +72,39 @@ public class EstateDAOTest {
         assertEquals(2, estateList.size());
     }
 
+
     @Test
     public void getEstateWhenNoEstateInserted() throws InterruptedException {
         //test
         List<Estate> estatesList = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstates());
         assertTrue(estatesList.isEmpty());
     }
+
+
+    @Test
+    public void insertAndUpdateEstate()throws InterruptedException{
+        this.estateDatabase.estateDAO().insertEstate(ESTATE_HOUSE);
+        Estate estate = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstates()).get(0);
+        estate.setStores(true);
+        this.estateDatabase.estateDAO().updateEstate(estate);
+
+        List<Estate> estates = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstates());
+        assertTrue(estates.size() == 1 && estates.get(0).getStores());
+    }
+
+
+
+    @Test
+    public void insertAndDeleteEstate()throws InterruptedException{
+        this.estateDatabase.estateDAO().insertEstate(ESTATE_HOUSE);
+        Estate estate = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstate(estateID));
+        this.estateDatabase.estateDAO().deleteEstate(Long.parseLong(estate.getEstateID()));
+
+        List<Estate> estates = LiveDataTestUtil.getValue(this.estateDatabase.estateDAO().getEstates());
+        assertTrue(estates.isEmpty());
+
+    }
+
 
 
 }

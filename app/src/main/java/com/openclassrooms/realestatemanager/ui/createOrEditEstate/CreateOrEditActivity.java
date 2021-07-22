@@ -159,6 +159,7 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
         String estateId = getIntent().getStringExtra("estateEditId");
 
+
         estateViewModel.getPictures(estateId).observe(this, new Observer<List<Picture>>() {
             @Override
             public void onChanged(List<Picture> pictures) {
@@ -246,18 +247,28 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
             Picture mPicture = new Picture("", getImageUri(this, thumbnail).toString(), "");
 
-            //tu as juste à ajouter la picture en bdd au moment où tu l'ajoute dans l'adapter (en edit seulement)
-
-
+            if (isEdit) {
+                mPicture.setIdEstate(updateEstate.getEstateID());
                 pictureAdapter.addPicture(mPicture);
-
+                //CREATE PICTURE
+                estateViewModel.createPicture(mPicture);
+            } else {
+                pictureAdapter.addPicture(mPicture);
+            }
 
         } else if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK) {
 
             final Uri imageUri = data.getData();
             Picture mPicture = new Picture("", imageUri.toString(), "");
-            pictureAdapter.addPicture(mPicture);
-
+            
+            if (isEdit) {
+                mPicture.setIdEstate(updateEstate.getEstateID());
+                pictureAdapter.addPicture(mPicture);
+                //CREATE PICTURE
+                estateViewModel.createPicture(mPicture);
+            } else {
+                pictureAdapter.addPicture(mPicture);
+            }
         }
     }
 
@@ -425,7 +436,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
             pictureList = pictureAdapter.getPicturePath();
             ArrayList<String> descriptionList = new ArrayList<>();
 
-            Log.d("mPicture", "picture : " + pictureList);
 
             for (int i = 0; i < pictureList.size(); i++) {
                 // ID
@@ -500,6 +510,22 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
             estateViewModel.updateEstate(updateEstate);
 
+
+            // PICTURE DESCRIPTION
+
+            pictureList = pictureAdapter.getPicturePath();
+
+            ArrayList<String> descriptionUpdateList = new ArrayList<>();
+
+            for (int i = 0; i < pictureList.size(); i++) {
+
+                EditText desc = recyclerViewPhotos.getLayoutManager().findViewByPosition(i).findViewById(R.id.photo_description);
+                String descriptionImage = desc.getText().toString();
+                descriptionUpdateList.add(descriptionImage);
+                pictureList.get(i).setPictureDescription(descriptionUpdateList.get(i));
+
+                estateViewModel.updatePicture(pictureList.get(i));
+            }
 
             Toast.makeText(this, getResources().getString(R.string.updateEstate), Toast.LENGTH_SHORT).show();
         }

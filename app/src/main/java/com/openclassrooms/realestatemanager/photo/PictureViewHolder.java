@@ -63,6 +63,7 @@ public class PictureViewHolder extends RecyclerView.ViewHolder implements View.O
             imageDescription.setEnabled(true);
         }else {
             imageDelete.setVisibility(View.GONE);
+            imageDescription.setEnabled(true);
         }
 
     }

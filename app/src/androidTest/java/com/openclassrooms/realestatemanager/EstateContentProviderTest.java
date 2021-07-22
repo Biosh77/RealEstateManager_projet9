@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Objects;
 
+import static com.openclassrooms.realestatemanager.contentProvider.EstateProvider.URI_ESTATE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -46,7 +47,7 @@ public class EstateContentProviderTest {
 
     @Test
     public void getEstateWhenNoEstateInserted() {
-        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID), null, null, null, null);
+        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(URI_ESTATE, estateID), null, null, null, null);
         assertThat(cursor,notNullValue());
         assertThat(cursor.getCount(), is(0));
         cursor.close();
@@ -55,11 +56,11 @@ public class EstateContentProviderTest {
     @Test
     public void insertAndGetEstate() {
         //Before : Adding demo estate
-        final Uri estateUri = mContentResolver.insert(EstateProvider.URI_ESTATE, generateEstate());
+        final Uri estateUri = mContentResolver.insert(URI_ESTATE, generateEstate());
         //test
-        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID), null, null, null, null);
+        final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(URI_ESTATE, estateID), null, null, null, null);
 
-        Log.d("UriTest", " uri : " + Uri.withAppendedPath(EstateProvider.URI_ESTATE, estateID));
+        //Log.d("UriTest", " URI_ESTATE : " + estateID);
 
         assertThat(cursor, notNullValue());
         assertThat(cursor.getCount(), is(1));

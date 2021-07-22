@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.injection.Injection
-import com.openclassrooms.realestatemanager.models.Estate
 import com.openclassrooms.realestatemanager.models.FullEstate
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
@@ -30,6 +28,8 @@ class ListFragment : Fragment(), EstateListAdapter.OnEstateClickListener {
     private var detailFragment: DetailFragment? = null
     private lateinit var adapterEstate: EstateListAdapter
     private val pictureList = arrayListOf<Picture>()
+
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -86,7 +86,7 @@ class ListFragment : Fragment(), EstateListAdapter.OnEstateClickListener {
 
 
     // UPDATE UI WITH VIEWMODEL
-    private fun updateEstates(fullEstate : List<FullEstate>) {
+    private fun updateEstates(fullEstate: List<FullEstate>) {
         adapterEstate.setEstateList(fullEstate)
     }
 

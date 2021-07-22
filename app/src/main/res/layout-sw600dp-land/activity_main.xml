@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -18,7 +19,7 @@
         android:baselineAligned="false"
         android:layout_below="@+id/toolbar"
         android:weightSum="2"
-        android:orientation="horizontal">
+        >
 
         <FrameLayout
             android:id="@+id/list_fragment_frameLayout"
