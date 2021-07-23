@@ -50,6 +50,7 @@ public class PictureViewHolder extends RecyclerView.ViewHolder implements View.O
             imageStream = imageDescription.getContext().getContentResolver().openInputStream(Uri.parse(picturePath));
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
             glide.load(selectedImage).apply(RequestOptions.centerCropTransform()).into(imagePhoto);
+            //imagePhoto.setImageBitmap(selectedImage);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
