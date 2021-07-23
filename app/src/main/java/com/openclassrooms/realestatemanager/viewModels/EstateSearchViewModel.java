@@ -40,7 +40,6 @@ public class EstateSearchViewModel extends ViewModel {
             Double maxPrice,
             String minDate,
             String maxDate,
-            Boolean photos,
             Boolean schools,
             Boolean stores,
             Boolean park,
@@ -112,14 +111,6 @@ public class EstateSearchViewModel extends ViewModel {
             args.add(minDate);
             args.add(maxDate);
 
-        }
-        if (photos.equals(true)) {
-            if (containsCondition) {
-                queryString += " AND";
-            } else {
-                queryString += " WHERE";
-            }
-            queryString += " photoList <> ''";
         }
         if (schools.equals(true)) {
             if (containsCondition) {

@@ -69,7 +69,6 @@ public class SearchActivity extends AppCompatActivity {
         maxPrice = findViewById(R.id.search_et_priceMaxi);
         minDate = findViewById(R.id.search_et_minDate);
         maxDate = findViewById(R.id.search_et_maxDate);
-        showingPictures = findViewById(R.id.yes);
         boxSchools = findViewById(R.id.search_box_schools);
         boxStores = findViewById(R.id.search_box_stores);
         boxRestaurants = findViewById(R.id.search_box_restaurants);
@@ -186,11 +185,6 @@ public class SearchActivity extends AppCompatActivity {
         if (!maxDate.getText().toString().isEmpty()) {
             String estateMaxDate =maxDate.getText().toString();
             searchEstates.setMaxDate(estateMaxDate);
-        }
-
-        if (!showingPictures.isChecked()) {
-            boolean estatePicturesShow = showingPictures.isChecked();
-            searchEstates.setPhotos(estatePicturesShow);
         }
 
         if (boxSchools.isChecked()) {
