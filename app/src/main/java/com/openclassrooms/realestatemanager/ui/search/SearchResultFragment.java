@@ -82,7 +82,6 @@ public class SearchResultFragment extends Fragment implements EstateSearchAdapte
                 searchEstates.getMaxPrice(),
                 searchEstates.getMinDate(),
                 searchEstates.getMaxDate(),
-                searchEstates.getPhotos(),
                 searchEstates.getSchools(),
                 searchEstates.getStores(),
                 searchEstates.getPark(),

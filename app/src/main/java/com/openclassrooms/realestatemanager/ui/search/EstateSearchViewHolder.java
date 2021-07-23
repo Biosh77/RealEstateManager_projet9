@@ -52,7 +52,7 @@ public class EstateSearchViewHolder extends RecyclerView.ViewHolder {
             itemSold.setImageResource(R.drawable.sold);
         }
         //Photo
-        if (!fullEstate.estate.getEstateID().isEmpty()) {
+        if (!fullEstate.myListPictures.isEmpty()) {
             glide.load(fullEstate.myListPictures.get(0).getPicturePath()).apply(RequestOptions.centerCropTransform()).into(itemImage);
         } else {
             glide.load(R.drawable.no_photo).apply(RequestOptions.centerCropTransform()).into(itemImage);
