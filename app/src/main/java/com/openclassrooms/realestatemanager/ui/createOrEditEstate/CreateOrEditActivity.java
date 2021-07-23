@@ -529,8 +529,6 @@ public class CreateOrEditActivity extends AppCompatActivity implements View.OnCl
 
             Toast.makeText(this, getResources().getString(R.string.updateEstate), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
 

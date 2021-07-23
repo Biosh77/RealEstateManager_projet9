@@ -44,8 +44,6 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListViewHolder
     }
 
 
-
-    //créer la vue à partir d'un layout
     @NonNull
     @Override
     public EstateListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -79,8 +77,6 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListViewHolder
         }
 
     }
-
-
 
     @Override
     public int getItemCount() {

@@ -43,7 +43,6 @@ public class SearchActivity extends AppCompatActivity {
     private TextView maxPrice;
     private TextView minDate;
     private TextView maxDate;
-    private MaterialCheckBox showingPictures;
     private MaterialCheckBox boxSchools;
     private MaterialCheckBox boxStores;
     private MaterialCheckBox boxRestaurants;

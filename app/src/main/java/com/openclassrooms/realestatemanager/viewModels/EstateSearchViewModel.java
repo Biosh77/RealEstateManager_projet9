@@ -112,6 +112,7 @@ public class EstateSearchViewModel extends ViewModel {
             args.add(maxDate);
 
         }
+
         if (schools.equals(true)) {
             if (containsCondition) {
                 queryString += " AND";

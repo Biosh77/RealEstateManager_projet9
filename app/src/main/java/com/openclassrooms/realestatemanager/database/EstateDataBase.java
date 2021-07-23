@@ -19,8 +19,8 @@ public abstract class EstateDataBase extends RoomDatabase  {
 
 
 
-    // --- SINGLETON --- // une seule instance pour toute l'app
-    private static volatile EstateDataBase INSTANCE;  // pour utiliser la même variable sans copie, 1 pour tout les threads
+    // --- SINGLETON --- //
+    private static volatile EstateDataBase INSTANCE;
 
     // --- DAO ---
     public abstract EstateDAO estateDAO();

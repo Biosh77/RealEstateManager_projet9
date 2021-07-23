@@ -16,9 +16,4 @@ public class GeocodeStream {
         GeocodeService geocodingService = GeocodeService.create();
         return geocodingService.getGeocode(address).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).timeout(10, TimeUnit.SECONDS);
     }
-
-
-
-
-
 }

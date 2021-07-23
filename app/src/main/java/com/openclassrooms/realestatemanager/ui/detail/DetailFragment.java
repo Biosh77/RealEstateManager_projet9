@@ -291,7 +291,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
             LatLng latLng = new LatLng(latitude, longitude);
 
-            Log.d("latlngTest", "address : " + latLng); // D/latlngTest: address : lat/lng: (0.0,0.0)
+            Log.d("latlngTest", "address : " + latLng);
 
             positionMarker = map.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
