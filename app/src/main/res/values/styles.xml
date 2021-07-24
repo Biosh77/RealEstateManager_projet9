@@ -50,12 +50,5 @@
         <item name="android:fontFamily">@font/kanit</item>
     </style>
 
-    <style name="TextStyleTablette" >
-        <item name="android:textColor">@color/lightGray</item>
-        <item name="android:textSize">30sp</item>
-        <item name="android:fontFamily">@font/kanit</item>
-    </style>
-
-
 
 </resources>

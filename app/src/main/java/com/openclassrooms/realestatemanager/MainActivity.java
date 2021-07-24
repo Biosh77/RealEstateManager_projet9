@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // faire un autre ShowDetailFragment pour la land view ?
 
     private void configureAndShowDetailFragment() {
         detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail_fragment_frameLayout);

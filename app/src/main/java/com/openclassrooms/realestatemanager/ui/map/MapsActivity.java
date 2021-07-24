@@ -224,7 +224,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
+    }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {

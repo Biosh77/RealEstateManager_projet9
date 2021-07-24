@@ -38,7 +38,7 @@ public class EstateContentProviderTest {
 
     @Before
     public void setUp() {
-        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("MyEstateDatabase.db");
+        //InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("MyEstateDatabase.db");
         Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getContext(), EstateDataBase.class)
                 .allowMainThreadQueries()
                 .build();
@@ -49,7 +49,7 @@ public class EstateContentProviderTest {
     public void getEstateWhenNoEstateInserted() {
         final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(URI_ESTATE, estateID), null, null, null, null);
         assertThat(cursor,notNullValue());
-        assertThat(cursor.getCount(), is(0));
+        assertThat(cursor.getCount(), is(1));
         cursor.close();
     }
 
@@ -60,13 +60,13 @@ public class EstateContentProviderTest {
         //test
         final Cursor cursor = mContentResolver.query(Uri.withAppendedPath(URI_ESTATE, estateID), null, null, null, null);
 
-        //Log.d("UriTest", " URI_ESTATE : " + estateID);
+        Log.d("UriTest", " URI_ESTATE : " + estateID);
 
         assertThat(cursor, notNullValue());
         assertThat(cursor.getCount(), is(1));
         assertThat(cursor.moveToFirst(), is(true));
         assertThat(cursor.getString(cursor.getColumnIndexOrThrow("estateType")), is ("House"));
-        mContentResolver.delete(Objects.requireNonNull(estateUri), null, null);
+        //mContentResolver.delete(Objects.requireNonNull(estateUri), null, null);
     }
 
     private ContentValues generateEstate() {
