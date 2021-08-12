@@ -22,3 +22,4 @@ Cette application est utilisable hors ligne grâce à sa base de données SQLite
 - Format Tablette
 - Tests Unitaires
 - Tests d'intégration
+- Java et une partie Kotlin
